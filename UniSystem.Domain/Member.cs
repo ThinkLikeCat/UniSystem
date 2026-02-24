@@ -1,11 +1,13 @@
 ﻿namespace UniSystem.Domain;
 
-public class Member
+public abstract class Member
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; private set; } =  Guid.NewGuid();
     
     public string FullName { get; private set; }
     public DateTime BirthDate { get; private set; }
+    
+    public string Password { get; private set; }
     
     public int Age
     {
@@ -13,7 +15,7 @@ public class Member
         {
             var dateRightNow = DateTime.Now;
             var age = dateRightNow.Year - BirthDate.Year;
-            if (dateRightNow.Month - dateRightNow.Month >= 0 && dateRightNow.Day >= BirthDate.Day) age++;
+            if (BirthDate.AddYears(age) > dateRightNow) age--;
             return age;
         }
     }
@@ -23,7 +25,7 @@ public class Member
         get
         {
             var nameComponents = FullName.Split();
-            return nameComponents[0] + nameComponents[1].First() + '.' + nameComponents[1].First() + '.';
+            return nameComponents[0] + nameComponents[1].First() + '.' + nameComponents[2].First() + '.';
         }
     }
 }
