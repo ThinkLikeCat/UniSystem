@@ -2,12 +2,12 @@
 
 public abstract class Member
 {
-    public Guid Id { get; private set; } =  Guid.NewGuid();
+    public Guid Id { get; private set; } = Guid.NewGuid();
     
-    public string FullName { get; private set; }
+    public string FullName { get; private set; } = string.Empty;
     public DateTime BirthDate { get; private set; }
     
-    public string Password { get; private set; }
+    public string Password { get; private set; } = string.Empty;
     
     public int Age
     {

@@ -2,9 +2,10 @@
 
 public class Teacher: Member
 {
-    public List<UniversityGroup> UniversityGroups { get; private set; }
+    public List<UniversityGroup> TeachingGroups { get; private set; }
+    public List<UniversitySubject> TeachingSubjects { get; private set; }
 
-    public void AddUniversityGroup(UniversityGroup group) => UniversityGroups.Add(group);
+    public void AddUniversityGroup(UniversityGroup group) => TeachingGroups.Add(group);
     
-    public void RemoveUniversityGroup(UniversityGroup group) => UniversityGroups.Remove(group);
+    public void RemoveUniversityGroup(UniversityGroup group) => TeachingGroups.Remove(group);
 }

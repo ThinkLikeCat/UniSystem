@@ -7,9 +7,9 @@ public class Student: Member
     public Speciality Speciality { get; private set; }
     public int Course { get; private set; }
     public UniversityGroup UniversityGroup { get; private set; }
-    
-    public string State {get; private set;} 
-    public bool IsCompletedEducation { get; private set; }
+
+    public string State { get; private set; } = string.Empty;
+    public bool IsCompletedEducation { get; private set; } = false;
 
     public void NextYearTransfer()
     {
@@ -18,7 +18,7 @@ public class Student: Member
         
         Course++;
         
-        if(Course > Speciality.MaxCourse)
+        if (Course > Speciality.MaxCourse)
             IsCompletedEducation = true;
     }
 }

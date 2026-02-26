@@ -2,5 +2,9 @@
 
 public class Curator: Member
 {
-    public UniversityGroup UniversityGroup { get; private set; }
+    public UniversityGroup SupervisesGroup { get; private set; }
+    
+    public void AddStudent(Student student) => SupervisesGroup.Students.Add(student);
+    
+    public void RemoveStudent(Student student) => SupervisesGroup.Students.Remove(student);
 }

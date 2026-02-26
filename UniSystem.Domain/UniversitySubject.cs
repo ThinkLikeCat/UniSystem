@@ -2,6 +2,8 @@
 
 public class UniversitySubject
 {
+    public Guid Id { get; private set; } = Guid.NewGuid();
+    
     public string Name { get; private set; }
     public Teacher Teacher { get; private set; }
     
@@ -10,7 +12,7 @@ public class UniversitySubject
 
     public UniversitySubject(string name, Teacher teacher, int courseStudyStarting)
     {
-        Name = name;
+        Name = name.Trim();
         Teacher = teacher;
         CourseStudyStarting = courseStudyStarting;
     }
