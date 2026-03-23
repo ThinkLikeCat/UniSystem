@@ -480,3 +480,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+#My file for ignore
+/UniSystem.Application/obj/
+/UniSystem.Domain/obj/
+/UniSystem.Infrastructure/obj/
+/UniSystem.Web/obj/
