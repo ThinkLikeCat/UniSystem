@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "aneJb84tHjc=",
+  "dgSpecHash": "+ujOy+NyTO0=",
   "success": true,
   "projectFilePath": "D:\\KP\\UniSystem\\UniSystem.Infrastructure\\UniSystem.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -9,15 +9,5 @@
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.1.4\\swashbuckle.aspnetcore.swaggergen.10.1.4.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.1.4\\swashbuckle.aspnetcore.swaggerui.10.1.4.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
-      "projectPath": "D:\\KP\\UniSystem\\UniSystem.Infrastructure\\UniSystem.Infrastructure.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\KP\\UniSystem\\UniSystem.Infrastructure\\UniSystem.Infrastructure.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

@@ -1,8 +1,8 @@
-﻿namespace UniSystem.Domain;
+﻿namespace UniSystem.Domain.Entities;
 
-public class Curator: Member
+public class Curator: Teacher
 {
-    public UniversityGroup SupervisesGroup { get; private set; }
+    public UniversityGroup SupervisesGroup { get; private set; } = new();
     
     public void AddStudent(Student student) => SupervisesGroup.Students.Add(student);
     
