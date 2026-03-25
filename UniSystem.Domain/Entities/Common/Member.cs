@@ -1,6 +1,9 @@
-﻿namespace UniSystem.Domain.Entities.Common;
+﻿using UniSystem.Domain.Interfaces;
+
+namespace UniSystem.Domain.Entities.Common;
 
 public abstract class Member<TId>: Entity<TId>
+    where TId: struct, IEntityId<TId>
 {
     public string FullName { get; private set; } = string.Empty;
 
@@ -36,7 +39,7 @@ public abstract class Member<TId>: Entity<TId>
         }
     }
 
-    protected Member(){}
+    protected Member() {}
     
     protected Member(string fullName, DateTime birthDate, string email, string password)
     {

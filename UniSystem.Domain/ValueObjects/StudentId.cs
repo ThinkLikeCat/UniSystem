@@ -1,8 +1,8 @@
-﻿namespace UniSystem.Domain.ValueObjects;
+﻿using UniSystem.Domain.Interfaces;
 
-public record struct StudentId(Guid Id)
+namespace UniSystem.Domain.ValueObjects;
+
+public record struct StudentId(Guid Id): IEntityId<StudentId>
 {
     public static StudentId NewId() => new(Guid.NewGuid());
-
-    public static StudentId Empty() => new(Guid.Empty);
 }

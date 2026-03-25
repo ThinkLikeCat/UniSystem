@@ -1,10 +1,10 @@
-﻿using UniSystem.Domain.ValueObjects;
+﻿using UniSystem.Domain.Entities.Common;
+using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
 
-public class Speciality
+public class Speciality: Entity<SpecialityId>
 {
-    public SpecialityId Id { get; private set; } = SpecialityId.NewId();
     
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
@@ -12,11 +12,10 @@ public class Speciality
     
     public List<UniversitySubject> UniversitySubjects { get; private set; }
     
-    public Speciality(){}
+    public Speciality() {}
 
     public Speciality(string name, string description, int maxCourse, List<UniversitySubject> universitySubjects)
     {
-        Id = SpecialityId.NewId();
         Name = name;
         Description = description;
         MaxCourse = maxCourse;

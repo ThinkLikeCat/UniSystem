@@ -1,8 +1,18 @@
-﻿namespace UniSystem.Domain.Entities.Common;
+﻿using UniSystem.Domain.Interfaces;
 
-public abstract class Entity<TId>
+namespace UniSystem.Domain.Entities.Common;
+
+public abstract class Entity<TId> where TId: struct, IEntityId<TId>
 {
     public TId Id { get; protected set; }
 
-    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; protected set; }
+
+    protected Entity()
+    {
+        Id = TId.NewId();
+        CreatedAt = DateTime.UtcNow;
+    }
+    
+    protected Entity(TId id) { Id = id; }
 }

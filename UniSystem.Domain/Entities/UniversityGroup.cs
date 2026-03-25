@@ -1,10 +1,10 @@
-﻿using UniSystem.Domain.ValueObjects;
+﻿using UniSystem.Domain.Entities.Common;
+using UniSystem.Domain.ValueObjects;
+
 namespace UniSystem.Domain.Entities;
 
-public class UniversityGroup
+public class UniversityGroup: Entity<UniversityGroupId>
 {
-    public UniversityGroupId Id { get; private set; } = UniversityGroupId.Empty();
-    
     public string Name { get; private set; } = string.Empty;
     public Speciality Speciality { get; private set; } = new();
     public Curator Curator { get; private set; } = new();
@@ -26,9 +26,12 @@ public class UniversityGroup
         EndedSubjects = endedSubjects ?? new List<UniversitySubject>();
     }
 
-    public void AddStudent(Student student)
+    /*public void AddStudent(Student student)
     {
-        if (student.Speciality == Speciality) Students.Add(student);
-        else throw new ArgumentException();
-    }
+        if (student.Speciality != Speciality)
+            throw new ArgumentException();
+
+        Students.Add(student);
+        student.UniversityGroup = this;
+    }*/
 }
