@@ -14,7 +14,6 @@ public class UniversitySubject: Entity<UniversitySubjectId>
     
     public UniversitySubject(string name, Teacher teacher, int courseStudyStarting)
     {
-        Id = UniversitySubjectId.NewId();
         Name = name.Trim();
         Teacher = teacher;
         CourseStudyStarting = courseStudyStarting;

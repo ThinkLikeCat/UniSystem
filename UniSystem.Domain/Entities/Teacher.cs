@@ -16,7 +16,6 @@ public class Teacher: Member<TeacherId>
         List<UniversityGroup> groups, List<UniversitySubject> subjects):
         base(fullName, birthDate, email, password)
     {
-        Id = TeacherId.NewId();
         Specialities = specialities;
         TeachingGroups = groups;
         TeachingSubjects = subjects;

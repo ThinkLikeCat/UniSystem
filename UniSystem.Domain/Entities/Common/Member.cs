@@ -1,4 +1,5 @@
-﻿using UniSystem.Domain.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using UniSystem.Domain.Interfaces;
 
 namespace UniSystem.Domain.Entities.Common;
 
@@ -6,13 +7,13 @@ public abstract class Member<TId>: Entity<TId>
     where TId: struct, IEntityId<TId>
 {
     public string FullName { get; private set; } = string.Empty;
-
+    
     public DateTime BirthDate { get; private set; } = DateTime.Now.AddYears(-18);
     
     public string Email { get; private set; } = string.Empty;
     
     public string Password { get; private set; } = string.Empty;
-
+    
     public int Age
     {
         get
@@ -23,7 +24,7 @@ public abstract class Member<TId>: Entity<TId>
             return age;
         }
     }
-
+    
     public string FormattedName
     {
         get
@@ -38,7 +39,7 @@ public abstract class Member<TId>: Entity<TId>
             };
         }
     }
-
+    
     protected Member() {}
     
     protected Member(string fullName, DateTime birthDate, string email, string password)
