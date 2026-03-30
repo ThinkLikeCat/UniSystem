@@ -2,17 +2,23 @@
 
 namespace UniSystem.Domain.Entities.Common;
 
-public abstract class Entity<TId> where TId: struct, IEntityId<TId>
+public abstract class Entity<TId> where TId : struct, IEntityId<TId>
 {
-    public TId Id { get; protected set; }
+    public TId Id { get; init; }
 
-    public DateTime CreatedAt { get; protected set; }
+    public DateTime CreatedAt { get; init; }
 
     protected Entity()
     {
         Id = TId.NewId();
         CreatedAt = DateTime.UtcNow;
     }
-    
-    protected Entity(TId id) { Id = id; }
+
+    protected Entity(TId id, DateTime createdAt)
+    {
+        Id = id;
+        CreatedAt = createdAt;
+    }
+
+    public override int GetHashCode() => Id.GetHashCode();
 }

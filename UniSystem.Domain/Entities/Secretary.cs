@@ -1,6 +1,9 @@
-﻿namespace UniSystem.Domain.Entities;
+﻿using UniSystem.Domain.Entities.Common;
+using UniSystem.Domain.ValueObjects.Id;
 
-public class Secretary
+namespace UniSystem.Domain.Entities;
+
+public class Secretary : Entity<SecretaryId>
 {
     
 }
