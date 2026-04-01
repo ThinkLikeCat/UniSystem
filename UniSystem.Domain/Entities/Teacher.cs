@@ -5,23 +5,24 @@ namespace UniSystem.Domain.Entities;
 
 public class Teacher: Member<TeacherId>
 {
-    public List<Speciality> Specialities { get; private set; } = new();
-    
-    public List<UniversityGroup> TeachingGroups { get; private set; } = new();
-    public List<UniversitySubject> TeachingSubjects { get; private set; } = new();
-    
-    public Teacher() {}
-    
-    public Teacher(string fullName, DateTime birthDate, string email, string password, List<Speciality> specialities,
-        List<UniversityGroup> groups, List<UniversitySubject> subjects):
-        base(fullName, birthDate, email, password)
+    public List<SpecialityId> SpecialitiesId { get; private set; } = new();
+    public List<UniversityGroupId> TeachingGroupsId { get; private set; } = new();
+
+    public List<UniversitySubjectId> TeachingSubjectsId { get; private set; } = new();
+
+    public void AddUniversityGroup(UniversityGroupId groupId)
     {
-        Specialities = specialities;
-        TeachingGroups = groups;
-        TeachingSubjects = subjects;
+        if(TeachingGroupsId.Contains(groupId))
+            throw new Exception();
+        
+        TeachingGroupsId.Add(groupId);
     }
-    
-    public void AddUniversityGroup(UniversityGroup group) => TeachingGroups.Add(group);
-    
-    public void RemoveUniversityGroup(UniversityGroup group) => TeachingGroups.Remove(group);
+
+    public void RemoveUniversityGroup(UniversityGroupId groupId)
+    {
+        if(!TeachingGroupsId.Contains(groupId))
+            throw new Exception();
+        
+        TeachingGroupsId.Remove(groupId);
+    }
 }

@@ -5,54 +5,33 @@ namespace UniSystem.Domain.Entities;
 
 public class Student: Member<StudentId>
 {
-    public Speciality? Speciality { get; private set; }
+    public SpecialityId? SpecialityId { get; private set; }
     public int Course { get; private set; }
-    public UniversityGroup? UniversityGroup { get; private set; }
+    public UniversityGroupId? UniversityGroupId { get; private set; }
 
-    public string State { get; private set; } = string.Empty;
+    public string State { get; private set; } = string.Empty; //Need reworking
     public bool IsCompletedEducation { get; private set; }
-
-    public Student() {}
-
-    public Student(string fullName, DateTime birthDate, string password, string email, Speciality speciality,
-        UniversityGroup universityGroup) :
-        base(fullName, birthDate, email, password)
-    {
-        Speciality = speciality;
-        UniversityGroup = universityGroup;
-    }
     
-    public void NextYearTransfer()
+    public void NextYearTransfer(Speciality speciality)
     {
-        if (Speciality is null)
+        if (SpecialityId is null)
             throw new NullReferenceException("For this operation student should have speciality");
+        
+        if(SpecialityId != speciality.Id)
+            throw new ArgumentOutOfRangeException($"Speciality {speciality.Id} has not been specified");
         
         if (IsCompletedEducation)
             throw new ArgumentOutOfRangeException($"Student {FullName} has completed education");
         
         Course++;
         
-        if (Course > Speciality.MaxCourse)
+        if (Course > speciality.MaxCourse)
             IsCompletedEducation = true;
     }
 
-    public void AddToUniversityGroup(UniversityGroup universityGroup)
+    public void SetGroupAndSpeciality(UniversityGroupId newUniversityGroupId, SpecialityId newSpecialityId)
     {
-        if (UniversityGroup is not null || Speciality is not null)
-            return;
-        
-        universityGroup.AddStudent(this);
-    }
-
-    public void TransferToAnotherUniversityGroup(UniversityGroup newUniversityGroup)
-    {
-        if(newUniversityGroup is null)
-            throw new ArgumentNullException("New group can't be null");
-        
-        if (UniversityGroup == newUniversityGroup)
-            return;
-        
-        Speciality = newUniversityGroup.Speciality;
-        UniversityGroup = newUniversityGroup;
+        UniversityGroupId = newUniversityGroupId;
+        SpecialityId = newSpecialityId;
     }
 }

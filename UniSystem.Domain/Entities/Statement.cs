@@ -7,9 +7,9 @@ namespace UniSystem.Domain.Entities;
 
 public class Statement : Entity<StatementId>
 {
-    public Student Student { get; private set; } = new();
-    public Secretary Secretary { get; private set; } = new();
-    public Dean Dean { get; private set; } = new();
+    public StudentId StudentId { get; private set; }
+    public SecretaryId SecretaryId { get; private set; }
+    public DeanId DeanId { get; private set; }
 
     public IStatementModels StatementModel { get; private set; }
     public SecretaryReviewStatus SecretaryReview { get; private set; } = SecretaryReviewStatus.Unwatched;
@@ -17,21 +17,21 @@ public class Statement : Entity<StatementId>
     public DeanReviewStatus DeanReview { get; private set; } = DeanReviewStatus.Unwatched;
     public bool IsDeanSign { get; private set; } = false;
 
-    public void Reject(Secretary secretary)
+    public void Reject(SecretaryId secretaryId)
     {
-        if (Secretary.Id == secretary.Id)
+        if (SecretaryId == secretaryId)
             SecretaryReview = SecretaryReviewStatus.Rejected;
     }
     
-    public void Approve(Secretary secretary)
+    public void Approve(SecretaryId secretaryId)
     {
-        if (Secretary.Id == secretary.Id)
+        if (SecretaryId == secretaryId)
             SecretaryReview = SecretaryReviewStatus.Approved;
     }
 
-    public void SignUp(Secretary secretary)
+    public void SignUp(SecretaryId secretaryId)
     {
-        if (Secretary.Id != secretary.Id)
+        if (SecretaryId != secretaryId)
             throw new ArgumentException();
         
         if(!(SecretaryReview is SecretaryReviewStatus.Rejected or SecretaryReviewStatus.Approved))
@@ -40,9 +40,9 @@ public class Statement : Entity<StatementId>
         IsSecretarySign = true;
     }
 
-    public void SignUp(Dean dean)
+    public void SignUp(DeanId deanId)
     {
-        if (Dean.Id != dean.Id) 
+        if (DeanId != deanId) 
             throw new ArgumentException();
         
         if (!IsSecretarySign)

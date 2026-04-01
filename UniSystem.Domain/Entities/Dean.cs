@@ -5,5 +5,4 @@ namespace UniSystem.Domain.Entities;
 
 public class Dean: Member<DeanId>
 {
-    public Dean() {}
 }

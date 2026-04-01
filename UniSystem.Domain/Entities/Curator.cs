@@ -2,7 +2,5 @@
 
 public class Curator: Teacher
 {
-    public UniversityGroup SupervisesGroup { get; private set; } = new();
-    
-    public Curator() {}
+    public UniversityGroup SupervisesGroup { get; private set; }
 }

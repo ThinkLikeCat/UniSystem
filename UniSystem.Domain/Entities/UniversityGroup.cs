@@ -5,9 +5,9 @@ namespace UniSystem.Domain.Entities;
 
 public class UniversityGroup: Entity<UniversityGroupId>
 {
-    public string Name { get; private set; } = string.Empty;
-    public Speciality Speciality { get; private set; } = new();
-    public Curator Curator { get; private set; } = new();
+    public string Name { get; private set; }
+    public SpecialityId SpecialityId { get; private set; }
+    public TeacherId CuratorId { get; private set; }
 
     public int StudentsMaxCount
     {
@@ -17,39 +17,25 @@ public class UniversityGroup: Entity<UniversityGroupId>
             : throw new ArgumentOutOfRangeException(nameof(StudentsMaxCount));
     } = 30;
 
-    public List<Student> Students { get; private set; } = new();
-    public List<UniversitySubject> LearningSubjects { get; private set; } = new();
-    public List<UniversitySubject> EndedSubjects { get; private set; } = new();
-
-    public UniversityGroup() {}
-
-    public UniversityGroup(string name, Speciality speciality, Curator curator, int studentsMaxCount, 
-        List<Student> students, List<UniversitySubject> learningSubjects, List<UniversitySubject>? endedSubjects = null)
-    {
-        Name = name;
-        Speciality = speciality;
-        Curator = curator;
-        StudentsMaxCount = studentsMaxCount;
-        AddStudents(students);
-        LearningSubjects = learningSubjects;
-        EndedSubjects = endedSubjects ?? new List<UniversitySubject>();
-    }
+    public List<StudentId> StudentsId { get; private set; } = new();
+    public List<UniversitySubjectId> LearningSubjectsId { get; private set; } = new();
+    public List<UniversitySubjectId> EndedSubjectsId { get; private set; } = new();
 
     public void AddStudent(Student student)
     {
-        if(Students.Count >= StudentsMaxCount)
+        if (StudentsId.Any(id => id == student.Id))
+            return;
+        
+        if(StudentsId.Count == StudentsMaxCount)
             throw new ArgumentOutOfRangeException(nameof(StudentsMaxCount));
 
-        if (Students.All(x => x.Id != student.Id))
-        {
-            student.TransferToAnotherUniversityGroup(this);
-            Students.Add(student);
-        }
+        StudentsId.Add(student.Id);
+        student.SetGroupAndSpeciality(Id, SpecialityId);
     }
 
     public void AddStudents(List<Student> students)
     {
-        if(students.Count + Students.Count > StudentsMaxCount)
+        if(students.Count + StudentsId.Count > StudentsMaxCount)
             throw new ArgumentOutOfRangeException(nameof(StudentsMaxCount));
 
         foreach (var student in students)
