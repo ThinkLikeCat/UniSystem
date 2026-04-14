@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using UniSystem.Domain.Interfaces;
+﻿using UniSystem.Domain.Interfaces;
 
-namespace UniSystem.Domain.Entities.Common;
+namespace UniSystem.Domain.Common;
 
 public abstract class Member<TId>: Entity<TId>
     where TId: struct, IEntityId<TId>
@@ -39,8 +38,6 @@ public abstract class Member<TId>: Entity<TId>
             };
         }
     }
-    
-    protected Member() {}
     
     protected Member(string fullName, DateTime birthDate, string email, string password)
     {

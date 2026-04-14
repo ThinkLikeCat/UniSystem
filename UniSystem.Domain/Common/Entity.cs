@@ -1,6 +1,6 @@
 ﻿using UniSystem.Domain.Interfaces;
 
-namespace UniSystem.Domain.Entities.Common;
+namespace UniSystem.Domain.Common;
 
 public abstract class Entity<TId> where TId : struct, IEntityId<TId>
 {

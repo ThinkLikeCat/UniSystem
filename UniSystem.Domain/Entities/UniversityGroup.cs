@@ -1,4 +1,4 @@
-﻿using UniSystem.Domain.Entities.Common;
+﻿using UniSystem.Domain.Common;
 using UniSystem.Domain.ValueObjects.Id;
 
 namespace UniSystem.Domain.Entities;
@@ -8,13 +8,14 @@ public class UniversityGroup: Entity<UniversityGroupId>
     public string Name { get; private set; }
     public SpecialityId SpecialityId { get; private set; }
     public TeacherId CuratorId { get; private set; }
+    public int Course { get; private set; }
 
     public int StudentsMaxCount
     {
         get;
         private set => field = value is > 15 and < 50
             ? value
-            : throw new ArgumentOutOfRangeException(nameof(StudentsMaxCount));
+            : throw new Exception(nameof(StudentsMaxCount));
     } = 30;
 
     public List<StudentId> StudentsId { get; private set; } = new();
@@ -27,7 +28,7 @@ public class UniversityGroup: Entity<UniversityGroupId>
             return;
         
         if(StudentsId.Count == StudentsMaxCount)
-            throw new ArgumentOutOfRangeException(nameof(StudentsMaxCount));
+            throw new Exception(nameof(StudentsMaxCount));
 
         StudentsId.Add(student.Id);
         student.SetGroupAndSpeciality(Id, SpecialityId);
@@ -36,7 +37,7 @@ public class UniversityGroup: Entity<UniversityGroupId>
     public void AddStudents(List<Student> students)
     {
         if(students.Count + StudentsId.Count > StudentsMaxCount)
-            throw new ArgumentOutOfRangeException(nameof(StudentsMaxCount));
+            throw new Exception(nameof(StudentsMaxCount));
 
         foreach (var student in students)
         {

@@ -1,4 +1,4 @@
-﻿using UniSystem.Domain.Entities.Common;
+﻿using UniSystem.Domain.Common;
 using UniSystem.Domain.Enums;
 using UniSystem.Domain.Interfaces;
 using UniSystem.Domain.ValueObjects.Id;
@@ -7,11 +7,9 @@ namespace UniSystem.Domain.Entities;
 
 public class Statement : Entity<StatementId>
 {
-    public StudentId StudentId { get; private set; }
+    public StudentId StudentId { get; private set; } = StudentId.NewId();
     public SecretaryId SecretaryId { get; private set; }
     public DeanId DeanId { get; private set; }
-
-    public IStatementModels StatementModel { get; private set; }
     public SecretaryReviewStatus SecretaryReview { get; private set; } = SecretaryReviewStatus.Unwatched;
     public bool IsSecretarySign { get; private set; } = false;
     public DeanReviewStatus DeanReview { get; private set; } = DeanReviewStatus.Unwatched;
@@ -32,10 +30,10 @@ public class Statement : Entity<StatementId>
     public void SignUp(SecretaryId secretaryId)
     {
         if (SecretaryId != secretaryId)
-            throw new ArgumentException();
+            throw new Exception();
         
         if(!(SecretaryReview is SecretaryReviewStatus.Rejected or SecretaryReviewStatus.Approved))
-            throw new ArgumentException();
+            throw new Exception();
             
         IsSecretarySign = true;
     }
@@ -43,10 +41,10 @@ public class Statement : Entity<StatementId>
     public void SignUp(DeanId deanId)
     {
         if (DeanId != deanId) 
-            throw new ArgumentException();
+            throw new Exception();
         
         if (!IsSecretarySign)
-            throw new ArgumentException();
+            throw new Exception();
 
         if (DeanReview is DeanReviewStatus.Reviewed)
         {

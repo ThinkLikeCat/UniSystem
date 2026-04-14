@@ -1,6 +1,12 @@
-﻿namespace UniSystem.Domain.Entities;
+﻿using UniSystem.Domain.ValueObjects.Id;
+
+namespace UniSystem.Domain.Entities;
 
 public class Curator: Teacher
 {
-    public UniversityGroup SupervisesGroup { get; private set; }
+    public UniversityGroupId SupervisesGroupId { get; private set; }
+    
+    public Curator(string fullName, DateTime birthDate, string email, string password) : base(fullName, birthDate, email, password)
+    {
+    }
 }
