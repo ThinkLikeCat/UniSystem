@@ -1,0 +1,18 @@
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects;
+
+public record FileSize
+{
+    public long Value { get; init; }
+
+    public FileSize(long value)
+    {
+        if (value < 0)
+            throw new DomainException("Размер файла не может быть отрицательным.");
+
+        Value = value;
+    }
+
+    public static implicit operator long(FileSize fileSize) => fileSize.Value;
+}
