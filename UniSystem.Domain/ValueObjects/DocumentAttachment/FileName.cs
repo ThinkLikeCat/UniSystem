@@ -1,4 +1,4 @@
-﻿namespace UniSystem.Domain.ValueObjects;
+﻿namespace UniSystem.Domain.ValueObjects.DocumentAttachment;
 
 public record FileName
 {

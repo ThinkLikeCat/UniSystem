@@ -1,17 +1,16 @@
-﻿namespace UniSystem.Domain.Entities;
+﻿using UniSystem.Domain.ValueObjects.AcademicGroup;
+
+namespace UniSystem.Domain.Entities;
 
 using Exceptions;
 
 public class AcademicGroup
 {
-    const int MinAllowed = 0;
-    const int MaxAllowed = 35;
-    
     public int Id { get; private set; }
 
-    public string Name { get; private set; } = string.Empty;
-    public int MaxCount { get; private set; }
-
+    public GroupName Name { get; private set; } = null!;
+    public GroupMaxCount MaxCount { get; private set; } = null!;
+    public Course Course { get; private set; } = null!;
     public int SpecialtyId { get; private set; }
     public Specialty Specialty { get; private set; } = null!;
 
@@ -22,45 +21,23 @@ public class AcademicGroup
 
     protected AcademicGroup() { }
 
-    public AcademicGroup(string name, int maxCount, int specialtyId)
+    public AcademicGroup(string name, int maxCount, short course, int specialtyId)
     {
-        ChangeName(name);
-
-        SetMaxCount(maxCount);
-
         if (specialtyId <= 0)
             throw new DomainException("Указан невалидный Id специальности.");
-
+        
+        Name = new GroupName(name);
+        MaxCount = new GroupMaxCount(maxCount);
         SpecialtyId = specialtyId;
-    }
-
-    public void ChangeName(string groupName)
-    {
-        if (string.IsNullOrWhiteSpace(groupName))
-            throw new InvalidAcademicGroupNameException("Имя группы не может быть пустым.");
-
-        var cleanedName = groupName.Trim();
-
-        if (cleanedName.Length > 20)
-            throw new InvalidAcademicGroupNameException(cleanedName);
-
-        Name = cleanedName;
-    }
-
-    public void SetMaxCount(int count)
-    {
-        if (count < MinAllowed || count > MaxAllowed)
-            throw new GroupSizeOutOfRangeException(count, MinAllowed, MaxAllowed);
-
-        if (CurrentCount > count)
-            throw new DomainException($"New max count ({count}) cannot be less than current count ({CurrentCount}).");
-
-        MaxCount = count;
+        Course = new Course(course);
     }
 
     public void AddStudent(StudentProfile student)
     {
-        if (CurrentCount >= MaxCount)
+        if(Students.Any(s => s.Id == student.Id))
+            throw new DomainException($"Студент с Id {student.Id} уже состоит в группе {Name.Value}.");
+        
+        if (!MaxCount.CanAccommodate(CurrentCount))
             throw new DomainException($"Группа {Name} переполнена.");
 
         _students.Add(student);

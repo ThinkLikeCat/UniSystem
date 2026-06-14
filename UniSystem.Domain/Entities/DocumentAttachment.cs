@@ -1,5 +1,6 @@
 ﻿using UniSystem.Domain.Common;
 using UniSystem.Domain.ValueObjects;
+using UniSystem.Domain.ValueObjects.DocumentAttachment;
 
 namespace UniSystem.Domain.Entities;
 

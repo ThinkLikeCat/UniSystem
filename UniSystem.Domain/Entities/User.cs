@@ -24,6 +24,10 @@ public class User : Entity<UserId>
     public StudentProfile? StudentProfile { get; set; } = null;
     public StaffProfile? StaffProfile { get; set; } = null;
     
+    public string FullName => string.IsNullOrWhiteSpace(Patronymic)
+        ? $"{LastName} {FirstName}"
+        : $"{LastName} {FirstName} {Patronymic}";
+    
     public void SetEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))

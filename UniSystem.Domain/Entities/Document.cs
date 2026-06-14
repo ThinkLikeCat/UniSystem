@@ -1,5 +1,6 @@
 ﻿using UniSystem.Domain.Common;
 using UniSystem.Domain.ValueObjects;
+using UniSystem.Domain.ValueObjects.DocumentType;
 
 namespace UniSystem.Domain.Entities;
 
@@ -35,4 +36,23 @@ public class Document : Entity<DocumentId>
     public User? ResolvedByUser { get; set; }
 
     public ICollection<DocumentAttachment> Attachments { get; set; } = new List<DocumentAttachment>();
+    
+    public IReadOnlyList<TemplateToken> GetTemplateTokens()
+    {
+        if (DocumentType is null)
+            throw new InvalidOperationException("Тип документа не загружен.");
+            
+        if (Student is null)
+            throw new InvalidOperationException("Данные студента не загружены.");
+        
+        var systemValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "{student_name}", Student.User.FullName},
+            { "{group_name}",   Student.AcademicGroup?.Name ?? string.Empty },
+            { "{course}",       Student.AcademicGroup?.Course.ToString() ?? string.Empty },
+            { "{specialty}",    Student.AcademicGroup?.Specialty.Name ?? string.Empty }
+        };
+        
+        return DocumentType.TemplateText.Tokenize(systemValues);
+    }
 }

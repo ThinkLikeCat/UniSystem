@@ -1,6 +1,6 @@
 ﻿using UniSystem.Domain.Exceptions;
 
-namespace UniSystem.Domain.ValueObjects;
+namespace UniSystem.Domain.ValueObjects.DocumentAttachment;
 
 public record FilePath
 {
@@ -13,12 +13,15 @@ public record FilePath
         if (string.IsNullOrWhiteSpace(value))
             throw new DomainException("Путь к файлу не может быть пустым.");
 
-        var cleaned = value.Trim();
+        var cleanedPath = value.Trim();
 
-        if (cleaned.Length > MaxLength)
+        if (cleanedPath.Length > MaxLength)
             throw new DomainException($"Путь к файлу не может превышать {MaxLength} символов.");
+        
+        if (cleanedPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+            throw new DomainException("Путь к файлу содержит недопустимые символы.");
 
-        Value = cleaned;
+        Value = cleanedPath.Replace('\\', '/');
     }
 
     public static implicit operator string(FilePath path) => path.Value;
