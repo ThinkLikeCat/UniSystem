@@ -9,9 +9,9 @@ public class DocumentAttachment: Entity<AttachmentId>
     public DocumentId DocumentId { get; private set; }
     public Document Document { get; private set; }
 
-    public FilePath FilePath { get; private set; }
-    public FileName OriginalFileName { get; private set; }
-    public FileSize FileSize { get; private set; }
+    public FilePath FilePath { get; private set; } = null!;
+    public FileName OriginalFileName { get; private set; } = null!;
+    public FileSize FileSize { get; private set; } = null!;
     public DateTimeOffset UploadedAt { get; private set; }
     
     protected DocumentAttachment() { }

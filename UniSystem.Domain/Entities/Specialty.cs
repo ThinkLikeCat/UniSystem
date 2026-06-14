@@ -8,7 +8,7 @@ public class Specialty
 
     public SpecialtyName Name { get; private set; } = null!;
     public SpecialtyCode Code { get; private set; } = null!;
-    public SpecialtyDuration MaxDurationInYears { get; private set; }
+    public SpecialtyDuration MaxDurationInYears { get; private set; } = null!;
     
     protected Specialty() { }
 

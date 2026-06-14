@@ -6,36 +6,49 @@ namespace UniSystem.Domain.Entities;
 
 public class Document : Entity<DocumentId>
 {
-    public Document(DocumentId id) : base(id) { }
-    protected Document() { }
+    public StudentId StudentId { get; private set; }
+    public StudentProfile Student { get; private set; } = null!;
 
-    public StudentId StudentId { get; set; }
-    public StudentProfile Student { get; set; } = null!;
-
-    public int DocumentTypeId { get; set; }
-    public DocumentType DocumentType { get; set; } = null!;
+    public int DocumentTypeId { get; private set; }
+    public DocumentType DocumentType { get; private set; } = null!;
     
-    public int DocumentCurrentStatusId { get; set; }
-    public DocumentStatus CurrentStatus { get; set; } = null!;
+    public int DocumentCurrentStatusId { get; private set; }
+    public DocumentStatus CurrentStatus { get; private set; } = null!;
 
-    public int? DocumentSecretaryStatusId { get; set; }
-    public DocumentStatus? SecretaryStatus { get; set; } = null!;
+    public int? DocumentSecretaryStatusId { get; private set; }
+    public DocumentStatus? SecretaryStatus { get; private set; } = null!;
 
-    public int? DocumentDeanStatusId { get; set; }
-    public DocumentStatus? DeanStatus { get; set; } = null!;
+    public int? DocumentDeanStatusId { get; private set; }
+    public DocumentStatus? DeanStatus { get; private set; } = null!;
 
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset? SendToReviewAt { get; set; } = null;
-    public DateTimeOffset? SecretaryCheckAt { get; set; } = null;
-    public DateTimeOffset? DeanCheckAt { get; set; } = null;
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? SendToReviewAt { get; private set; } = null;
+    public DateTimeOffset? SecretaryCheckAt { get; private set; } = null;
+    public DateTimeOffset? DeanCheckAt { get; private set; } = null;
 
-    public string DynamicValues { get; set; } = "{}";
-    public string? ResolutionComment { get; set; } = null;
+    public string DynamicValues { get; private set; } = "{}";
+    public string? ResolutionComment { get; private set; } = null;
 
-    public UserId? ResolvedByUserId { get; set; }
-    public User? ResolvedByUser { get; set; }
+    public UserId? ResolvedByUserId { get; private set; }
+    public User? ResolvedByUser { get; private set; }
 
     public ICollection<DocumentAttachment> Attachments { get; set; } = new List<DocumentAttachment>();
+    
+    protected Document() { }
+    public Document(DocumentId id, StudentId studentId, int documentTypeId, int initialStatusId) : base(id)
+    {
+        if (documentTypeId <= 0)
+            throw new ArgumentException("Невалидный ID типа документа.", nameof(documentTypeId));
+            
+        if (initialStatusId <= 0)
+            throw new ArgumentException("Невалидный ID начального статуса.", nameof(initialStatusId));
+
+        StudentId = studentId;
+        DocumentTypeId = documentTypeId;
+        DocumentCurrentStatusId = initialStatusId;
+        
+        CreatedAt = DateTimeOffset.UtcNow;
+    }
     
     public IReadOnlyList<TemplateToken> GetTemplateTokens()
     {

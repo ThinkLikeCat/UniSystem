@@ -6,7 +6,7 @@ public class DocumentStatus
 {
     public int Id { get; set; }
 
-    public DocumentStatusName Name { get; private set; }
+    public DocumentStatusName Name { get; private set; } = null!;
     
     protected DocumentStatus() { }
 
