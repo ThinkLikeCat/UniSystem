@@ -5,7 +5,7 @@ public record SpecialtyDuration
     public const int MinDuration = 3;
     public const int MaxDuration = 6;
 
-    public short Value { get; init; }
+    public short Value { get; private set; }
 
     public SpecialtyDuration(short value)
     {

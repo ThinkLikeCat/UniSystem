@@ -1,19 +1,17 @@
-﻿namespace UniSystem.Domain.Entities;
+﻿using UniSystem.Domain.ValueObjects.Specialty;
+
+namespace UniSystem.Domain.Entities;
 
 public class StudentStatus
 {
-    public int Id { get; set; }
+    public int Id { get; private set; }
 
-    public string Name { get; set; } = string.Empty;
+    public SpecialtyName Name { get; private set; } = null!;
+
+    protected StudentStatus() { }
     
-    public void SetName(string name)
+    public StudentStatus(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(name));
-
-        if (name.Length > 50)
-            throw new ArgumentException("Имя не может превышать 50 символов.", nameof(name));
-
-        Name = name.Trim();
+        Name = new(name);
     }
 }

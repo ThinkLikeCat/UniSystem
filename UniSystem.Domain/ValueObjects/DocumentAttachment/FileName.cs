@@ -17,7 +17,7 @@ public record FileName
         ".jpeg"
     ];
     
-    public string Value { get; init; } = string.Empty;
+    public string Value { get; private set; }
 
     public FileName(string value)
     {

@@ -3,7 +3,7 @@
 public record RoleNameDative
 {
     public const int MaxLength = 55;
-    public string Value { get; init; } = string.Empty;
+    public string Value { get; private set; }
 
     public RoleNameDative(string value)
     {

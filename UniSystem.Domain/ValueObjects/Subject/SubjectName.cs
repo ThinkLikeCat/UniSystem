@@ -1,11 +1,12 @@
-﻿namespace UniSystem.Domain.ValueObjects.DocumentStatus;
+﻿namespace UniSystem.Domain.ValueObjects.Subject;
 
-public record DocumentStatusName
+public record SubjectName
 {
-    public const int MaxLength = 50;
+    public const int MaxLength = 150;
+    
     public string Value { get; private set; }
 
-    public DocumentStatusName(string value)
+    public SubjectName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(value));
@@ -13,10 +14,10 @@ public record DocumentStatusName
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Имя не может быть длиннее 50 символов.", nameof(value));
-
+            throw new ArgumentException($"Имя не может превышать {MaxLength} символов.", nameof(value));
+        
         Value = cleanedName;
     }
-
-    public static implicit operator string(DocumentStatusName name) => name.Value;
+    
+    public static implicit operator string(SubjectName name) => name.Value;
 }

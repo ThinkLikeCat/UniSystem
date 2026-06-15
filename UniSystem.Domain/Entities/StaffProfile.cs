@@ -5,14 +5,25 @@ namespace UniSystem.Domain.Entities;
 
 public class StaffProfile : Entity<StaffId>
 {
-    public StaffProfile(StaffId id) : base(id) { }
+    public int DepartmentId { get; private set; }
+    public Department Department { get; private set; } = null!;
+
+    public int? AcademicGroupId { get; private set; } = null;
+    public AcademicGroup? AcademicGroup { get; private set; }
+
+    public User User { get; private set; } = null!;
+
     protected StaffProfile() { }
-
-    public int DepartmentId { get; set; }
-    public Department Department { get; set; } = null!;
-
-    public int? AcademicGroupId { get; set; } = null;
-    public AcademicGroup? AcademicGroup { get; set; }
-
-    public User User { get; set; } = null!;
+    
+    public StaffProfile(StaffId id, int departmentId, int? academicGroupId) : base(id)
+    {
+        if (departmentId <= 0)
+            throw new ArgumentException("Невалидный ID типа отделения.", nameof(departmentId));
+        
+        if(academicGroupId is not null && academicGroupId <= 0)
+            throw new ArgumentException("Невалидный ID группы.", nameof(academicGroupId));
+        
+        DepartmentId = departmentId;
+        AcademicGroupId = academicGroupId;
+    }
 }

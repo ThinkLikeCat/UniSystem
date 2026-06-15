@@ -7,7 +7,7 @@ public record GroupMaxCount
     private const int MinAllowed = 0;
     private const int MaxAllowed = 35;
 
-    public int Value { get; init; }
+    public int Value { get; private set; }
 
     public GroupMaxCount(int value)
     {

@@ -4,7 +4,7 @@ namespace UniSystem.Domain.ValueObjects.DocumentAttachment;
 
 public record FileSize
 {
-    public long Value { get; init; }
+    public long Value { get; private set; }
 
     public FileSize(long value)
     {

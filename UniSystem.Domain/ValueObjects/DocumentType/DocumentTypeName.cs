@@ -3,7 +3,7 @@
 public record DocumentTypeName
 {
     public const int MaxLength = 100;
-    public string Value { get; init; } = string.Empty;
+    public string Value { get; private set; }
 
     public DocumentTypeName(string value)
     {

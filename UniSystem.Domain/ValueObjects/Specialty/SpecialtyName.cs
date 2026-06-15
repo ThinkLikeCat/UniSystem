@@ -3,7 +3,7 @@
 public record SpecialtyName
 {
     public const int MaxLength = 150;
-    public string Value { get; init; } = string.Empty;
+    public string Value { get; private set; }
 
     public SpecialtyName(string value)
     {

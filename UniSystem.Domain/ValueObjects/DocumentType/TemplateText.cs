@@ -16,7 +16,7 @@ public sealed record TemplateText
     
     private static readonly string[] StrictlyRequired = ["{student_name}", "{group_name}", "{reason}"];
 
-    public string Value { get; init; } = string.Empty;
+    public string Value { get; private set; }
 
     public TemplateText(string value)
     {

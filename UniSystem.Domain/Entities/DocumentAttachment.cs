@@ -7,7 +7,7 @@ namespace UniSystem.Domain.Entities;
 public class DocumentAttachment: Entity<AttachmentId>
 {
     public DocumentId DocumentId { get; private set; }
-    public Document Document { get; private set; }
+    public Document Document { get; private set; } = null!;
 
     public FilePath FilePath { get; private set; } = null!;
     public FileName OriginalFileName { get; private set; } = null!;

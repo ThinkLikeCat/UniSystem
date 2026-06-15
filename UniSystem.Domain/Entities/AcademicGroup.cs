@@ -11,6 +11,7 @@ public class AcademicGroup
     public GroupName Name { get; private set; } = null!;
     public GroupMaxCount MaxCount { get; private set; } = null!;
     public Course Course { get; private set; } = null!;
+    
     public int SpecialtyId { get; private set; }
     public Specialty Specialty { get; private set; } = null!;
 

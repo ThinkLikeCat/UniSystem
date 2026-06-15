@@ -4,7 +4,7 @@ namespace UniSystem.Domain.Entities;
 
 public class DocumentStatus
 {
-    public int Id { get; set; }
+    public int Id { get; private set; }
 
     public DocumentStatusName Name { get; private set; } = null!;
     

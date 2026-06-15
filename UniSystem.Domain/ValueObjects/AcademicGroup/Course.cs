@@ -7,7 +7,7 @@ public record Course
     public const short MinCourse = 1;
     public const short MaxCourse = 6;
     
-    public short Value { get; }
+    public short Value { get; private set; }
 
     public Course(short value)
     {

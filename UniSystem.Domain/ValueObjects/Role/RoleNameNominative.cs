@@ -3,7 +3,7 @@
 public record RoleNameNominative
 {
     public const int MaxLength = 50;
-    public string Value { get; init; } = string.Empty;
+    public string Value { get; private set; }
 
     public RoleNameNominative(string value)
     {
