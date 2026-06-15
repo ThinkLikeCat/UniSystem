@@ -29,7 +29,7 @@ public record FileName
         if (cleanedName.Length > MaxFileNameLength)
             throw new ArgumentException($"Имя файла не может превышать {MaxFileNameLength} символов.");
         
-        var extension = Path.GetExtension(value).ToLowerInvariant();
+        var extension = Path.GetExtension(cleanedName).ToLowerInvariant();
         
         if (!AllowedExtensions.Contains(extension))
             throw new ArgumentException($"Формат {extension} не поддерживается.");

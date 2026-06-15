@@ -10,12 +10,12 @@ public record DocumentTypeName
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(value));
 
-        var cleanedPath = value.Trim();
+        var cleanedName = value.Trim();
         
-        if (cleanedPath.Length > MaxLength)
+        if (cleanedName.Length > MaxLength)
             throw new ArgumentException("Имя не может превышать 100 символов.", nameof(value));
 
-        Value = cleanedPath;
+        Value = cleanedName;
     }
 
     public static implicit operator string(DocumentTypeName name) => name.Value;

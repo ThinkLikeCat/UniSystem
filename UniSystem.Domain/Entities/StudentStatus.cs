@@ -1,4 +1,4 @@
-﻿using UniSystem.Domain.ValueObjects.Specialty;
+﻿using UniSystem.Domain.ValueObjects.StudentStatus;
 
 namespace UniSystem.Domain.Entities;
 
@@ -6,7 +6,7 @@ public class StudentStatus
 {
     public int Id { get; private set; }
 
-    public SpecialtyName Name { get; private set; } = null!;
+    public StatusName Name { get; private set; } = null!;
 
     protected StudentStatus() { }
     

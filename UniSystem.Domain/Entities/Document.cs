@@ -15,11 +15,11 @@ public class Document : Entity<DocumentId>
     public int DocumentCurrentStatusId { get; private set; }
     public DocumentStatus CurrentStatus { get; private set; } = null!;
 
-    public int? DocumentSecretaryStatusId { get; private set; }
-    public DocumentStatus? SecretaryStatus { get; private set; } = null!;
+    public int? DocumentSecretaryStatusId { get; private set; } = null;
+    public DocumentStatus? SecretaryStatus { get; private set; } = null;
 
-    public int? DocumentDeanStatusId { get; private set; }
-    public DocumentStatus? DeanStatus { get; private set; } = null!;
+    public int? DocumentDeanStatusId { get; private set; } = null;
+    public DocumentStatus? DeanStatus { get; private set; } = null;
 
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? SendToReviewAt { get; private set; } = null;

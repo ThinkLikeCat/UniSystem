@@ -16,7 +16,7 @@ public class User : Entity<UserId>
     public IconPath IconPath { get; private set; } = null!;
     
     public int RoleId { get; private set; }
-    public Role Role { get; private set; }
+    public Role Role { get; private set; } = null!;
     
     public StudentProfile? StudentProfile { get; private set; } = null;
     public StaffProfile? StaffProfile { get; private set; } = null;
@@ -24,17 +24,18 @@ public class User : Entity<UserId>
     protected User() { }
 
     public User(UserId id, string email, string passwordHash, string firstName, string lastName, string? patronymic,
-        Sex sex, int roleId) : base(id)
+        Sex sex, string iconPath, int roleId) : base(id)
     {
         if(roleId <= 0)
             throw new ArgumentException("Невалидный ID роли.", nameof(roleId));
         
-        Email = new Email(email);
-        PasswordHash = new PasswordHash(passwordHash);
-        FirstName = new FirstName(firstName);
-        LastName = new LastName(lastName);
+        Email = new (email);
+        PasswordHash = new (passwordHash);
+        FirstName = new (firstName);
+        LastName = new (lastName);
         Patronymic = patronymic is null ? null : new Patronymic(patronymic);
         SetSex(sex);
+        IconPath = new (iconPath);
         RoleId = roleId;
     }
     
