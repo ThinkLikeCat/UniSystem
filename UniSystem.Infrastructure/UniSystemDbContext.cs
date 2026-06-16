@@ -43,6 +43,8 @@ public class UniSystemDbContext : DbContext
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<UserId>().HaveConversion<UserIdConverter>();
+        configurationBuilder.Properties<StudentId>().HaveConversion<StudentIdConverter>();
+        configurationBuilder.Properties<StaffId>().HaveConversion<StaffIdConverter>();
         configurationBuilder.Properties<DocumentId>().HaveConversion<DocumentIdConverter>();
         configurationBuilder.Properties<AttachmentId>().HaveConversion<AttachmentIdConverter>();
 
@@ -251,6 +253,16 @@ public class UniSystemDbContext : DbContext
     private sealed class UserIdConverter : ValueConverter<UserId, Guid>
     {
         public UserIdConverter() : base(v => v.Value, v => new UserId(v)) { }
+    }
+
+    private sealed class StudentIdConverter : ValueConverter<StudentId, Guid>
+    {
+        public StudentIdConverter() : base(v => v.Value, v => new StudentId(v)) { }
+    }
+
+    private sealed class StaffIdConverter : ValueConverter<StaffId, Guid>
+    {
+        public StaffIdConverter() : base(v => v.Value, v => new StaffId(v)) { }
     }
 
     private sealed class DocumentIdConverter : ValueConverter<DocumentId, Guid>

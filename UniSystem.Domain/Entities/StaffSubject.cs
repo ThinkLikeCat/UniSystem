@@ -5,7 +5,7 @@ namespace UniSystem.Domain.Entities;
 
 public class StaffSubject
 {
-    public UserId StaffId { get; private set; }
+    public StaffId StaffId { get; private set; }
     public StaffProfile StaffProfile { get; private set; } = null!;
 
     public int SubjectId { get; private set; }
@@ -13,7 +13,7 @@ public class StaffSubject
 
     protected StaffSubject() { }
 
-    public StaffSubject(UserId staffId, int subjectId)
+    public StaffSubject(StaffId staffId, int subjectId)
     {
         if (subjectId <= 0)
             throw new InvalidStaffSubjectReferenceException(subjectId);

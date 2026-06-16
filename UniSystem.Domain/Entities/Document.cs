@@ -7,7 +7,7 @@ namespace UniSystem.Domain.Entities;
 
 public class Document : Entity<DocumentId>
 {
-    public UserId StudentId { get; private set; }
+    public StudentId StudentId { get; private set; }
     public StudentProfile Student { get; private set; } = null!;
 
     public int DocumentTypeId { get; private set; }
@@ -36,7 +36,7 @@ public class Document : Entity<DocumentId>
     public ICollection<DocumentAttachment> Attachments { get; private set; } = new List<DocumentAttachment>();
     
     protected Document() { }
-    public Document(DocumentId id, UserId studentId, int documentTypeId, int initialStatusId) : base(id)
+    public Document(DocumentId id, StudentId studentId, int documentTypeId, int initialStatusId) : base(id)
     {
         if (documentTypeId <= 0)
             throw new InvalidDocumentTypeReferenceException(documentTypeId);
