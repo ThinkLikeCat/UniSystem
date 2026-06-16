@@ -1,4 +1,5 @@
 ﻿using UniSystem.Domain.Common;
+using UniSystem.Domain.Exceptions;
 using UniSystem.Domain.ValueObjects;
 using UniSystem.Domain.ValueObjects.DocumentType;
 
@@ -32,16 +33,16 @@ public class Document : Entity<DocumentId>
     public UserId? ResolvedByUserId { get; private set; }
     public User? ResolvedByUser { get; private set; }
 
-    public ICollection<DocumentAttachment> Attachments { get; set; } = new List<DocumentAttachment>();
+    public ICollection<DocumentAttachment> Attachments { get; private set; } = new List<DocumentAttachment>();
     
     protected Document() { }
     public Document(DocumentId id, StudentId studentId, int documentTypeId, int initialStatusId) : base(id)
     {
         if (documentTypeId <= 0)
-            throw new ArgumentException("Невалидный ID типа документа.", nameof(documentTypeId));
+            throw new InvalidDocumentTypeReferenceException(documentTypeId);
             
         if (initialStatusId <= 0)
-            throw new ArgumentException("Невалидный ID начального статуса.", nameof(initialStatusId));
+            throw new InvalidDocumentStatusReferenceException(initialStatusId);
 
         StudentId = studentId;
         DocumentTypeId = documentTypeId;
@@ -61,9 +62,9 @@ public class Document : Entity<DocumentId>
         var systemValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             { "{student_name}", Student.User.FullName},
-            { "{group_name}",   Student.AcademicGroup?.Name ?? string.Empty },
-            { "{course}",       Student.AcademicGroup?.Course.ToString() ?? string.Empty },
-            { "{specialty}",    Student.AcademicGroup?.Specialty.Name ?? string.Empty }
+            { "{group_name}",   Student.AcademicGroup?.Name.Value ?? string.Empty },
+            { "{course}",       Student.AcademicGroup?.Course.Value.ToString() ?? string.Empty },
+            { "{specialty}",    Student.AcademicGroup?.Specialty.Name.Value ?? string.Empty }
         };
         
         return DocumentType.TemplateText.Tokenize(systemValues);

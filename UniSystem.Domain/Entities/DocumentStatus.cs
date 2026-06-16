@@ -10,7 +10,7 @@ public class DocumentStatus
     
     protected DocumentStatus() { }
 
-    public DocumentStatus(DocumentStatusName name)
+    public DocumentStatus(string name)
     {
         Name = new (name);
     }

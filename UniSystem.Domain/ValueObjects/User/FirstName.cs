@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.User;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.User;
 
 public record FirstName
 {
@@ -8,12 +10,12 @@ public record FirstName
     public FirstName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя не может быть пустым.", nameof(value));
+            throw new InvalidUserFirstNameException(value);
 
         var cleaned = value.Trim();
 
         if (cleaned.Length > MaxLength)
-            throw new ArgumentException($"Имя не может превышать {MaxLength} символов.", nameof(value));
+            throw new InvalidUserFirstNameException(value);
 
         Value = cleaned;
     }

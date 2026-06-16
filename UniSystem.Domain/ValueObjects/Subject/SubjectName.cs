@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Subject;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Subject;
 
 public record SubjectName
 {
@@ -9,12 +11,12 @@ public record SubjectName
     public SubjectName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(value));
+            throw new InvalidSubjectNameException(value);
 
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException($"Имя не может превышать {MaxLength} символов.", nameof(value));
+            throw new InvalidSubjectNameException(value);
         
         Value = cleanedName;
     }

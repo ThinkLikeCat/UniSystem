@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Role;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Role;
 
 public record RoleNameDative
 {
@@ -8,12 +10,12 @@ public record RoleNameDative
     public RoleNameDative(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя в дательном падеже не может быть пустым.", nameof(value));
+            throw new InvalidRoleNameException(value);
 
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Имя в дательном падеже не может превышать 55 символов.", nameof(value));
+            throw new InvalidRoleNameException(value);
 
         Value = cleanedName;
     }

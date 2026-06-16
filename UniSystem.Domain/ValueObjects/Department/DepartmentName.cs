@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Department;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Department;
 
 public record DepartmentName
 {
@@ -8,12 +10,12 @@ public record DepartmentName
     public DepartmentName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя кафедры не может быть пустым.");
+            throw new InvalidDepartmentNameException(value);
 
         var cleanedName = value.Trim();
 
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException($"Имя кафедры не может превышать {MaxLength} символов.");
+            throw new InvalidDepartmentNameException(value);
 
         Value = cleanedName;
     }

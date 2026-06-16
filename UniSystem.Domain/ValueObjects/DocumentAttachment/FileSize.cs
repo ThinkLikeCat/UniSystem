@@ -9,7 +9,7 @@ public record FileSize
     public FileSize(long value)
     {
         if (value < 0)
-            throw new DomainException("Размер файла не может быть отрицательным.");
+            throw new InvalidAttachmentFileSizeException(value);
 
         Value = value;
     }

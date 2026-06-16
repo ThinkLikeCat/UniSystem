@@ -11,15 +11,15 @@ public record FilePath
     public FilePath(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Путь к файлу не может быть пустым.");
+            throw new InvalidAttachmentFilePathException(value);
 
         var cleanedPath = value.Trim();
 
         if (cleanedPath.Length > MaxLength)
-            throw new DomainException($"Путь к файлу не может превышать {MaxLength} символов.");
+            throw new InvalidAttachmentFilePathException(value);
         
         if (cleanedPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-            throw new DomainException("Путь к файлу содержит недопустимые символы.");
+            throw new InvalidAttachmentFilePathException(value);
 
         Value = cleanedPath.Replace('\\', '/');
     }

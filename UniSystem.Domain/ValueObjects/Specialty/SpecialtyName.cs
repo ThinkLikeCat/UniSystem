@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Specialty;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Specialty;
 
 public record SpecialtyName
 {
@@ -8,12 +10,12 @@ public record SpecialtyName
     public SpecialtyName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Наименование не может быть пустым или состоять только из пробелов.", nameof(value));
+            throw new InvalidSpecialtyNameException(value);
 
         var cleanedName = value.Trim();
 
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Наименование не может превышать 150 символов.", nameof(value));
+            throw new InvalidSpecialtyNameException(value);
 
         Value = cleanedName;
     }

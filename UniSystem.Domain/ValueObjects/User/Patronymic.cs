@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.User;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.User;
 
 public record Patronymic
 {
@@ -8,12 +10,12 @@ public record Patronymic
     public Patronymic(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Отчество не может состоять только из пробелов.", nameof(value));
+            throw new InvalidUserPatronymicException(value);
 
         var cleaned = value.Trim();
 
         if (cleaned.Length > MaxLength)
-            throw new ArgumentException($"Отчество не может превышать {MaxLength} символов.", nameof(value));
+            throw new InvalidUserPatronymicException(value);
 
         Value = cleaned;
     }

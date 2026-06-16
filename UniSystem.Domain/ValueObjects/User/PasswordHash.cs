@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.User;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.User;
 
 public record PasswordHash
 {
@@ -7,7 +9,7 @@ public record PasswordHash
     public PasswordHash(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Хэш пароля не может быть пустым.", nameof(value));
+            throw new InvalidUserPasswordHashException();
 
         Value = value;
     }

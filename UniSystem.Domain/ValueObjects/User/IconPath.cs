@@ -10,15 +10,15 @@ public record IconPath
     public IconPath(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Путь к иконке не может быть пустым.");
+            throw new InvalidUserIconException(value);
 
         var cleanedPath = value.Trim();
 
         if (cleanedPath.Length > MaxLength)
-            throw new DomainException($"Путь к иконке не может превышать {MaxLength} символов.");
+            throw new InvalidUserIconException(value);
         
         if (cleanedPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-            throw new DomainException("Путь к файлу содержит недопустимые символы.");
+            throw new InvalidUserIconException(value);
 
         Value = cleanedPath.Replace('\\', '/');
     }

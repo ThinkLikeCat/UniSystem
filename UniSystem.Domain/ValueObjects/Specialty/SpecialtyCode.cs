@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Specialty;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Specialty;
 
 public record SpecialtyCode
 {
@@ -8,12 +10,12 @@ public record SpecialtyCode
     public SpecialtyCode(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Код не может быть пустым.", nameof(value));
+            throw new InvalidSpecialtyCodeException(value);
 
         var cleanedName = value.Trim();
 
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Код не может превышать 20 символов.", nameof(value));
+            throw new InvalidSpecialtyCodeException(value);
 
         Value = cleanedName;
     }

@@ -12,7 +12,7 @@ public record Course
     public Course(short value)
     {
         if (value < MinCourse || value > MaxCourse)
-            throw new DomainException($"Курс не может быть меньше {MinCourse} или больше {MaxCourse}.");
+            throw new CourseOutOfRangeException(value);
         
         Value = value;
     }

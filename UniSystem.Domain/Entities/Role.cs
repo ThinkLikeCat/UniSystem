@@ -1,4 +1,5 @@
 ﻿using UniSystem.Domain.Enums;
+using UniSystem.Domain.Exceptions;
 using UniSystem.Domain.ValueObjects.Role;
 
 namespace UniSystem.Domain.Entities;
@@ -23,7 +24,7 @@ public class Role
     public void SetSystemName(SystemRoleName systemName)
     {
         if (!Enum.IsDefined(typeof(SystemRoleName), systemName))
-            throw new ArgumentOutOfRangeException(nameof(systemName), systemName, "Указано неопределенное системное имя.");
+            throw new InvalidRoleSystemNameException(systemName);
 
         SystemName = systemName;
     }

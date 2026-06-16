@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.DocumentType;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.DocumentType;
 
 public record DocumentTypeName
 {
@@ -8,12 +10,12 @@ public record DocumentTypeName
     public DocumentTypeName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(value));
+            throw new InvalidDocumentTypeNameException(value);
 
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Имя не может превышать 100 символов.", nameof(value));
+            throw new InvalidDocumentTypeNameException(value);
 
         Value = cleanedName;
     }

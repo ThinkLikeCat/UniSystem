@@ -21,7 +21,7 @@ public sealed record TemplateText
     public TemplateText(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Текст шаблона не может быть пустым.");
+            throw new InvalidTemplateTextException();
 
         var cleaned = value.Trim();
         
@@ -34,15 +34,13 @@ public sealed record TemplateText
         foreach (var placeholder in templatePlaceholders)
         {
             if (!AllowedPlaceholders.Contains(placeholder))
-                throw new DomainException(
-                    $"Шаблон содержит неизвестный системе тег: '{placeholder}'. " +
-                    $"Допустимые теги: {string.Join(", ", AllowedPlaceholders)}");
+                throw new UnknownTemplatePlaceholderException(placeholder);
         }
         
         foreach (var required in StrictlyRequired)
         {
             if (!templatePlaceholders.Contains(required))
-                throw new DomainException($"Ошибка шаблона. Отсутствует обязательный тег: {required}");
+                throw new MissingRequiredTemplatePlaceholderException(required);
         }
 
         Value = cleaned;

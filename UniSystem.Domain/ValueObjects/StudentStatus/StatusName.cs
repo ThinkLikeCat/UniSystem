@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.StudentStatus;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.StudentStatus;
 
 public record StatusName
 {
@@ -9,12 +11,12 @@ public record StatusName
     public StatusName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(value));
+            throw new InvalidStudentStatusNameException(value);
 
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException($"Имя не может превышать {MaxLength} символов.", nameof(value));
+            throw new InvalidStudentStatusNameException(value);
         
         Value = cleanedName;
     }

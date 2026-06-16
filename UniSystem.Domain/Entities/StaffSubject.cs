@@ -1,4 +1,5 @@
-﻿using UniSystem.Domain.ValueObjects;
+﻿using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
 
@@ -15,7 +16,7 @@ public class StaffSubject
     public StaffSubject(StaffId staffId, int subjectId)
     {
         if (subjectId <= 0)
-            throw new ArgumentException("Невалидный ID предмета.", nameof(subjectId));
+            throw new InvalidStaffSubjectReferenceException(subjectId);
         
         StaffId = staffId;
         SubjectId = subjectId;

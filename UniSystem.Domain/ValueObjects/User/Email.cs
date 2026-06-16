@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using UniSystem.Domain.Exceptions;
 
 namespace UniSystem.Domain.ValueObjects.User;
 
@@ -12,15 +13,15 @@ public record Email
     public Email(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Email не может быть пустым.", nameof(value));
+            throw new InvalidUserEmailException(value);
 
         var cleaned = value.Trim();
 
         if (cleaned.Length > MaxLength)
-            throw new ArgumentException($"Email не может превышать {MaxLength} символов.", nameof(value));
+            throw new InvalidUserEmailException(value);
 
         if (!EmailRegex.IsMatch(cleaned))
-            throw new ArgumentException("Некорректный формат Email.", nameof(value));
+            throw new InvalidUserEmailException(value);
 
         Value = cleaned;
     }

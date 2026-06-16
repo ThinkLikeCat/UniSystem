@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Role;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Role;
 
 public record RoleNameNominative
 {
@@ -8,12 +10,12 @@ public record RoleNameNominative
     public RoleNameNominative(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя в именительном падеже не может быть пустым.", nameof(value));
+            throw new InvalidRoleNameException(value);
 
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Имя в именительном падеже не может превышать 50 символов.", nameof(value));
+            throw new InvalidRoleNameException(value);
 
         Value = cleanedName;
     }

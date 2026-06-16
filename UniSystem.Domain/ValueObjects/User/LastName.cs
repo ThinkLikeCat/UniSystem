@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.User;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.User;
 
 public record LastName
 {
@@ -8,12 +10,12 @@ public record LastName
     public LastName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Фамилия не может быть пустой.", nameof(value));
+            throw new InvalidUserLastNameException(value);
 
         var cleaned = value.Trim();
 
         if (cleaned.Length > MaxLength)
-            throw new ArgumentException($"Фамилия не может превышать {MaxLength} символов.", nameof(value));
+            throw new InvalidUserLastNameException(value);
 
         Value = cleaned;
     }

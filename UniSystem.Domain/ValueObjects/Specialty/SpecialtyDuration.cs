@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.Specialty;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.Specialty;
 
 public record SpecialtyDuration
 {
@@ -10,7 +12,7 @@ public record SpecialtyDuration
     public SpecialtyDuration(short value)
     {
         if (value < MinDuration || value > MaxDuration)
-            throw new ArgumentException($"Продолжительность обучения должна быть в диапазоне от {MinDuration} до {MaxDuration}", nameof(value));
+            throw new InvalidSpecialtyDurationException(value);
 
         Value = value;
     }

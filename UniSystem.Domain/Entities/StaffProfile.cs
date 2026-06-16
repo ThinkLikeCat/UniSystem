@@ -1,4 +1,5 @@
 ﻿using UniSystem.Domain.Common;
+using UniSystem.Domain.Exceptions;
 using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
@@ -18,10 +19,10 @@ public class StaffProfile : Entity<StaffId>
     public StaffProfile(StaffId id, int departmentId, int? academicGroupId) : base(id)
     {
         if (departmentId <= 0)
-            throw new ArgumentException("Невалидный ID типа отделения.", nameof(departmentId));
+            throw new InvalidStaffDepartmentReferenceException(departmentId);
         
         if(academicGroupId is not null && academicGroupId <= 0)
-            throw new ArgumentException("Невалидный ID группы.", nameof(academicGroupId));
+            throw new InvalidStaffAcademicGroupReferenceException(academicGroupId);
         
         DepartmentId = departmentId;
         AcademicGroupId = academicGroupId;

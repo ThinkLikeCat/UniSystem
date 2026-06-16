@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.DocumentAttachment;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.DocumentAttachment;
 
 public record FileName
 {
@@ -22,17 +24,17 @@ public record FileName
     public FileName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Некорректное имя файла.");
+            throw new InvalidAttachmentFileNameException(value);
 
         var cleanedName = value.Trim();
 
         if (cleanedName.Length > MaxFileNameLength)
-            throw new ArgumentException($"Имя файла не может превышать {MaxFileNameLength} символов.");
+            throw new InvalidAttachmentFileNameException(value);
         
         var extension = Path.GetExtension(cleanedName).ToLowerInvariant();
         
         if (!AllowedExtensions.Contains(extension))
-            throw new ArgumentException($"Формат {extension} не поддерживается.");
+            throw new InvalidAttachmentFileNameException(value);
         
         Value = cleanedName;
     }

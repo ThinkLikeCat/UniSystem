@@ -1,4 +1,5 @@
 ﻿using UniSystem.Domain.Common;
+using UniSystem.Domain.Exceptions;
 using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
@@ -20,10 +21,10 @@ public class StudentProfile : Entity<StudentId>
     public StudentProfile(StudentId id, string studentTicket, int academicGroupId, int studentStatusId) : base(id)
     {
         if (academicGroupId <= 0)
-            throw new ArgumentException("Невалидный ID типа группы.", nameof(academicGroupId));
+            throw new InvalidStudentGroupReferenceException(academicGroupId);
         
         if (studentStatusId <= 0)
-            throw new ArgumentException("Невалидный ID статуса студента.", nameof(studentStatusId));
+            throw new InvalidStudentStatusReferenceException(studentStatusId);
         
         StudentTicket = studentTicket;
         AcademicGroupId = academicGroupId;

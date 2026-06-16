@@ -25,7 +25,7 @@ public class AcademicGroup
     public AcademicGroup(string name, int maxCount, short course, int specialtyId)
     {
         if (specialtyId <= 0)
-            throw new DomainException("Указан невалидный Id специальности.");
+            throw new InvalidSpecialtyReferenceException(specialtyId);
         
         Name = new GroupName(name);
         MaxCount = new GroupMaxCount(maxCount);
@@ -36,10 +36,10 @@ public class AcademicGroup
     public void AddStudent(StudentProfile student)
     {
         if(Students.Any(s => s.Id == student.Id))
-            throw new DomainException($"Студент с Id {student.Id} уже состоит в группе {Name.Value}.");
+            throw new StudentAlreadyInGroupException(student.Id, Name.Value);
         
         if (!MaxCount.CanAccommodate(CurrentCount))
-            throw new DomainException($"Группа {Name} переполнена.");
+            throw new GroupIsFullException(Name.Value);
 
         _students.Add(student);
     }
@@ -50,7 +50,7 @@ public class AcademicGroup
             throw new ArgumentNullException(nameof(student), "Студент не может быть null.");
         
         if (!_students.Contains(student))
-            throw new DomainException($"Студент с ID {student.Id} не принадлежит группе {Name}.");
+            throw new StudentNotInGroupException(student.Id, Name.Value);
         
         _students.Remove(student);
     }

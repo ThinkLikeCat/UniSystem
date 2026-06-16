@@ -1,4 +1,6 @@
-﻿namespace UniSystem.Domain.ValueObjects.DocumentStatus;
+﻿using UniSystem.Domain.Exceptions;
+
+namespace UniSystem.Domain.ValueObjects.DocumentStatus;
 
 public record DocumentStatusName
 {
@@ -8,12 +10,12 @@ public record DocumentStatusName
     public DocumentStatusName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Имя не может быть пустым или состоять только из пробелов.", nameof(value));
+            throw new InvalidDocumentStatusNameException(value);
 
         var cleanedName = value.Trim();
         
         if (cleanedName.Length > MaxLength)
-            throw new ArgumentException("Имя не может быть длиннее 50 символов.", nameof(value));
+            throw new InvalidDocumentStatusNameException(value);
 
         Value = cleanedName;
     }

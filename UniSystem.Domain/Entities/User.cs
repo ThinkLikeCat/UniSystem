@@ -1,5 +1,6 @@
 ﻿using UniSystem.Domain.Common;
 using UniSystem.Domain.Enums;
+using UniSystem.Domain.Exceptions;
 using UniSystem.Domain.ValueObjects;
 using UniSystem.Domain.ValueObjects.User;
 
@@ -27,7 +28,7 @@ public class User : Entity<UserId>
         Sex sex, string iconPath, int roleId) : base(id)
     {
         if(roleId <= 0)
-            throw new ArgumentException("Невалидный ID роли.", nameof(roleId));
+            throw new InvalidUserRoleIdException(roleId);
         
         Email = new (email);
         PasswordHash = new (passwordHash);
@@ -46,7 +47,7 @@ public class User : Entity<UserId>
     public void SetSex(Sex sex)
     {
         if (!Enum.IsDefined(typeof(Sex), sex))
-            throw new ArgumentOutOfRangeException(nameof(sex), sex, "Указано неопределенное значение пола.");
+            throw new InvalidUserSexException(sex);
         
         Sex = sex;
     }
