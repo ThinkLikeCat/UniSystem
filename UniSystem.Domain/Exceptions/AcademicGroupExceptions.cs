@@ -14,7 +14,7 @@ public class InvalidSpecialtyReferenceException(int specialtyId) : DomainExcepti
     $"Указан невалидный Id специальности: {specialtyId}.")
 { }
 
-public class StudentAlreadyInGroupException(StudentId studentId, string groupName) : DomainException(
+public class StudentAlreadyInGroupException(UserId studentId, string groupName) : DomainException(
     $"Студент с Id {studentId.Value} уже состоит в группе '{groupName}'.")
 { }
 
@@ -22,7 +22,7 @@ public class GroupIsFullException(string groupName) : DomainException(
     $"Группа '{groupName}' переполнена.")
 { }
 
-public class StudentNotInGroupException(StudentId studentId, string groupName) : DomainException(
+public class StudentNotInGroupException(UserId studentId, string groupName) : DomainException(
     $"Студент с ID {studentId.Value} не принадлежит группе '{groupName}'.")
 { }
 

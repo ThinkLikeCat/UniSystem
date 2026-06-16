@@ -4,7 +4,7 @@ using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
 
-public class StaffProfile : Entity<StaffId>
+public class StaffProfile : Entity<UserId>
 {
     public int DepartmentId { get; private set; }
     public Department Department { get; private set; } = null!;
@@ -16,7 +16,7 @@ public class StaffProfile : Entity<StaffId>
 
     protected StaffProfile() { }
     
-    public StaffProfile(StaffId id, int departmentId, int? academicGroupId) : base(id)
+    public StaffProfile(UserId id, int departmentId, int? academicGroupId) : base(id)
     {
         if (departmentId <= 0)
             throw new InvalidStaffDepartmentReferenceException(departmentId);

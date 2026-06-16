@@ -7,12 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EFCore.NamingConventions.Extended" Version="1.0.0" />
+        <PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />
         <PackageReference Include="MediatR" Version="14.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="10.0.2"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.4" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\UniSystem.Application\UniSystem.Application.csproj" />
+      <ProjectReference Include="..\UniSystem.Domain\UniSystem.Domain.csproj" />
+      <ProjectReference Include="..\UniSystem.Infrastructure\UniSystem.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
