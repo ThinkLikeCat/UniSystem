@@ -3,9 +3,9 @@ using UniSystem.Domain.Enums;
 namespace UniSystem.Domain.Exceptions;
 
 public class InvalidRoleNameException(string name) : DomainException(
-    $"Имя роли '{name}' невалидно.")
+    $"Invalid role name '{name}'.")
 { }
 
 public class InvalidRoleSystemNameException(SystemRoleName systemName) : DomainException(
-    $"Указано неопределенное системное имя роли: '{systemName}'.")
+    $"Invalid system role name: '{systemName}'.")
 { }

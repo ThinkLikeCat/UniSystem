@@ -1,11 +1,10 @@
 ﻿using UniSystem.Domain.Exceptions;
-using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
 
 public class StaffSubject
 {
-    public StaffId StaffId { get; private set; }
+    public Guid StaffId { get; private set; }
     public StaffProfile StaffProfile { get; private set; } = null!;
 
     public int SubjectId { get; private set; }
@@ -13,7 +12,7 @@ public class StaffSubject
 
     protected StaffSubject() { }
 
-    public StaffSubject(StaffId staffId, int subjectId)
+    public StaffSubject(Guid staffId, int subjectId)
     {
         if (subjectId <= 0)
             throw new InvalidStaffSubjectReferenceException(subjectId);

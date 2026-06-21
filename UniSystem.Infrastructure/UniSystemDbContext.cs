@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Entities;
 using UniSystem.Domain.Enums;
 using UniSystem.Domain.ValueObjects;
@@ -16,12 +18,10 @@ using UniSystem.Domain.ValueObjects.User;
 
 namespace UniSystem.Infrastructure;
 
-public class UniSystemDbContext : DbContext
+public class UniSystemDbContext : IdentityDbContext<User, Role, Guid>, IApplicationDbContext
 {
-    public DbSet<User> Users => Set<User>();
     public DbSet<StudentProfile> StudentProfiles => Set<StudentProfile>();
     public DbSet<StaffProfile> StaffProfiles => Set<StaffProfile>();
-    public DbSet<Role> Roles => Set<Role>();
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Specialty> Specialties => Set<Specialty>();
     public DbSet<AcademicGroup> AcademicGroups => Set<AcademicGroup>();
@@ -42,14 +42,9 @@ public class UniSystemDbContext : DbContext
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder.Properties<UserId>().HaveConversion<UserIdConverter>();
-        configurationBuilder.Properties<StudentId>().HaveConversion<StudentIdConverter>();
-        configurationBuilder.Properties<StaffId>().HaveConversion<StaffIdConverter>();
         configurationBuilder.Properties<DocumentId>().HaveConversion<DocumentIdConverter>();
         configurationBuilder.Properties<AttachmentId>().HaveConversion<AttachmentIdConverter>();
 
-        configurationBuilder.Properties<Email>().HaveConversion<EmailConverter>();
-        configurationBuilder.Properties<PasswordHash>().HaveConversion<PasswordHashConverter>();
         configurationBuilder.Properties<FirstName>().HaveConversion<FirstNameConverter>();
         configurationBuilder.Properties<LastName>().HaveConversion<LastNameConverter>();
         configurationBuilder.Properties<Patronymic>().HaveConversion<PatronymicConverter>();
@@ -78,15 +73,9 @@ public class UniSystemDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasIndex(e => e.Email).IsUnique();
-
-            entity.HasOne(e => e.Role)
-                .WithMany()
-                .HasForeignKey(e => e.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             entity.HasOne(e => e.StudentProfile)
                 .WithOne(e => e.User)
                 .HasForeignKey<StudentProfile>(e => e.Id)
@@ -100,7 +89,8 @@ public class UniSystemDbContext : DbContext
 
         modelBuilder.Entity<StudentProfile>(entity =>
         {
-            entity.Property(e => e.StudentTicket).HasMaxLength(50);
+            entity.Property(e => e.StudentTicket).HasMaxLength(20).IsRequired();
+            entity.HasIndex(e => e.StudentTicket).IsUnique();
 
             entity.HasOne(e => e.AcademicGroup)
                 .WithMany(e => e.Students)
@@ -131,7 +121,6 @@ public class UniSystemDbContext : DbContext
             entity.HasIndex(e => e.SystemName).IsUnique();
             entity.HasIndex(e => e.NameNominative).IsUnique();
             entity.HasIndex(e => e.NameDative).IsUnique();
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<Department>(entity =>
@@ -190,12 +179,16 @@ public class UniSystemDbContext : DbContext
 
         modelBuilder.Entity<Document>(entity =>
         {
-            entity.Property(e => e.DynamicValues).HasMaxLength(4000);
-            entity.Property(e => e.ResolutionComment).HasMaxLength(2000);
+            entity.Property(e => e.DynamicValues)
+                .HasColumnType("jsonb")
+                .IsRequired(false);
+            entity.Property(e => e.ResolutionComment)
+                .HasColumnType("text")
+                .IsRequired(false);
 
-            entity.HasOne(e => e.Student)
+            entity.HasOne(e => e.Author)
                 .WithMany()
-                .HasForeignKey(e => e.StudentId)
+                .HasForeignKey(e => e.AuthorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.DocumentType)
@@ -250,21 +243,6 @@ public class UniSystemDbContext : DbContext
         });
     }
 
-    private sealed class UserIdConverter : ValueConverter<UserId, Guid>
-    {
-        public UserIdConverter() : base(v => v.Value, v => new UserId(v)) { }
-    }
-
-    private sealed class StudentIdConverter : ValueConverter<StudentId, Guid>
-    {
-        public StudentIdConverter() : base(v => v.Value, v => new StudentId(v)) { }
-    }
-
-    private sealed class StaffIdConverter : ValueConverter<StaffId, Guid>
-    {
-        public StaffIdConverter() : base(v => v.Value, v => new StaffId(v)) { }
-    }
-
     private sealed class DocumentIdConverter : ValueConverter<DocumentId, Guid>
     {
         public DocumentIdConverter() : base(v => v.Value, v => new DocumentId(v)) { }
@@ -273,16 +251,6 @@ public class UniSystemDbContext : DbContext
     private sealed class AttachmentIdConverter : ValueConverter<AttachmentId, Guid>
     {
         public AttachmentIdConverter() : base(v => v.Value, v => new AttachmentId(v)) { }
-    }
-
-    private sealed class EmailConverter : ValueConverter<Email, string>
-    {
-        public EmailConverter() : base(v => v.Value, v => new Email(v)) { }
-    }
-
-    private sealed class PasswordHashConverter : ValueConverter<PasswordHash, string>
-    {
-        public PasswordHashConverter() : base(v => v.Value, v => new PasswordHash(v)) { }
     }
 
     private sealed class FirstNameConverter : ValueConverter<FirstName, string>

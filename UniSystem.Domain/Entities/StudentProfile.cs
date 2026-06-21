@@ -1,10 +1,9 @@
 ﻿using UniSystem.Domain.Common;
 using UniSystem.Domain.Exceptions;
-using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Domain.Entities;
 
-public class StudentProfile : Entity<StudentId>
+public class StudentProfile : Entity<Guid>
 {
     public string StudentTicket { get; private set; } = string.Empty;
 
@@ -15,10 +14,12 @@ public class StudentProfile : Entity<StudentId>
     public StudentStatus StudentStatus { get; private set; } = null!;
 
     public User User { get; private set; } = null!;
+
+    internal void SetUser(User user) => User = user;
     
     protected StudentProfile() { }
 
-    public StudentProfile(StudentId id, string studentTicket, int academicGroupId, int studentStatusId) : base(id)
+    internal StudentProfile(Guid id, string studentTicket, int academicGroupId, int studentStatusId) : base(id)
     {
         if (academicGroupId <= 0)
             throw new InvalidStudentGroupReferenceException(academicGroupId);

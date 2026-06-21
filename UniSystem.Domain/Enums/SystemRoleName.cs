@@ -3,5 +3,9 @@
 public enum SystemRoleName
 {
     StaffProfile,
-    StudentProfile
+    StudentProfile,
+    Dean,
+    Secretary,
+    Curator,
+    Admin
 }

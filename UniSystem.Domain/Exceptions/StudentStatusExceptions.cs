@@ -1,5 +1,5 @@
 namespace UniSystem.Domain.Exceptions;
 
 public class InvalidStudentStatusNameException(string name) : DomainException(
-    $"Имя статуса студента '{name}' невалидно. Имя должно быть непустым и не более 50 символов.")
+    $"Invalid student status name '{name}'. Name must be non-empty and at most 50 characters.")
 { }

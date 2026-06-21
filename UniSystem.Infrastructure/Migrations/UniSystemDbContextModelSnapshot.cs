@@ -17,10 +17,140 @@ namespace UniSystem.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.8")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_type");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_value");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_asp_net_role_claims");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_asp_net_role_claims_role_id");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_type");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text")
+                        .HasColumnName("claim_value");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_asp_net_user_claims");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_asp_net_user_claims_user_id");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text")
+                        .HasColumnName("login_provider");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text")
+                        .HasColumnName("provider_key");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text")
+                        .HasColumnName("provider_display_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("LoginProvider", "ProviderKey")
+                        .HasName("pk_asp_net_user_logins");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_asp_net_user_logins_user_id");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("UserId", "RoleId")
+                        .HasName("pk_asp_net_user_roles");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_asp_net_user_roles_role_id");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text")
+                        .HasColumnName("login_provider");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name")
+                        .HasName("pk_asp_net_user_tokens");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
 
             modelBuilder.Entity("UniSystem.Domain.Entities.AcademicGroup", b =>
                 {
@@ -91,6 +221,10 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_id");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -116,14 +250,11 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnName("document_type_id");
 
                     b.Property<string>("DynamicValues")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)")
+                        .HasColumnType("jsonb")
                         .HasColumnName("dynamic_values");
 
                     b.Property<string>("ResolutionComment")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
+                        .HasColumnType("text")
                         .HasColumnName("resolution_comment");
 
                     b.Property<Guid?>("ResolvedByUserId")
@@ -138,12 +269,11 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("send_to_review_at");
 
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("student_id");
-
                     b.HasKey("Id")
                         .HasName("pk_documents");
+
+                    b.HasIndex("AuthorId")
+                        .HasDatabaseName("ix_documents_author_id");
 
                     b.HasIndex("DocumentCurrentStatusId")
                         .HasDatabaseName("ix_documents_document_current_status_id");
@@ -159,9 +289,6 @@ namespace UniSystem.Infrastructure.Migrations
 
                     b.HasIndex("ResolvedByUserId")
                         .HasDatabaseName("ix_documents_resolved_by_user_id");
-
-                    b.HasIndex("StudentId")
-                        .HasDatabaseName("ix_documents_student_id");
 
                     b.ToTable("documents", (string)null);
                 });
@@ -262,12 +389,20 @@ namespace UniSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("UniSystem.Domain.Entities.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("name");
 
                     b.Property<string>("NameDative")
                         .IsRequired()
@@ -279,19 +414,36 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name_nominative");
 
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("normalized_name");
+
                     b.Property<string>("SystemName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("system_name");
 
                     b.HasKey("Id")
-                        .HasName("pk_roles");
+                        .HasName("pk_asp_net_roles");
+
+                    b.HasIndex("NameDative")
+                        .IsUnique()
+                        .HasDatabaseName("ix_asp_net_roles_name_dative");
+
+                    b.HasIndex("NameNominative")
+                        .IsUnique()
+                        .HasDatabaseName("ix_asp_net_roles_name_nominative");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.HasIndex("SystemName")
                         .IsUnique()
-                        .HasDatabaseName("ix_roles_system_name");
+                        .HasDatabaseName("ix_asp_net_roles_system_name");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("UniSystem.Domain.Entities.Specialty", b =>
@@ -345,10 +497,6 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("department_id");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
                     b.HasKey("Id")
                         .HasName("pk_staff_profiles");
 
@@ -357,10 +505,6 @@ namespace UniSystem.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId")
                         .HasDatabaseName("ix_staff_profiles_department_id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_staff_profiles_user_id");
 
                     b.ToTable("staff_profiles", (string)null);
                 });
@@ -400,13 +544,9 @@ namespace UniSystem.Infrastructure.Migrations
 
                     b.Property<string>("StudentTicket")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("student_ticket");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_student_profiles");
@@ -417,9 +557,9 @@ namespace UniSystem.Infrastructure.Migrations
                     b.HasIndex("StudentStatusId")
                         .HasDatabaseName("ix_student_profiles_student_status_id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("StudentTicket")
                         .IsUnique()
-                        .HasDatabaseName("ix_student_profiles_user_id");
+                        .HasDatabaseName("ix_student_profiles_student_ticket");
 
                     b.ToTable("student_profiles", (string)null);
                 });
@@ -475,13 +615,27 @@ namespace UniSystem.Infrastructure.Migrations
             modelBuilder.Entity("UniSystem.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("access_failed_count");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("text")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("email");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("email_confirmed");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -498,8 +652,25 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("last_name");
 
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("lockout_enabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lockout_end");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("normalized_email");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("normalized_user_name");
+
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("password_hash");
 
@@ -507,26 +678,100 @@ namespace UniSystem.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("patronymic");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("phone_number_confirmed");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text")
+                        .HasColumnName("security_stamp");
 
                     b.Property<string>("Sex")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("sex");
 
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("two_factor_enabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("user_name");
+
                     b.HasKey("Id")
-                        .HasName("pk_users");
+                        .HasName("pk_asp_net_users");
 
-                    b.HasIndex("Email")
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_email");
+                        .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_users_role_id");
+                    b.ToTable("AspNetUsers", (string)null);
+                });
 
-                    b.ToTable("users", (string)null);
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("UniSystem.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asp_net_role_claims_asp_net_roles_role_id");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("UniSystem.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asp_net_user_claims_asp_net_users_user_id");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.HasOne("UniSystem.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asp_net_user_logins_asp_net_users_user_id");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.HasOne("UniSystem.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asp_net_user_roles_asp_net_roles_role_id");
+
+                    b.HasOne("UniSystem.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asp_net_user_roles_asp_net_users_user_id");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.HasOne("UniSystem.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
             modelBuilder.Entity("UniSystem.Domain.Entities.AcademicGroup", b =>
@@ -543,6 +788,13 @@ namespace UniSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("UniSystem.Domain.Entities.Document", b =>
                 {
+                    b.HasOne("UniSystem.Domain.Entities.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_documents_users_author_id");
+
                     b.HasOne("UniSystem.Domain.Entities.DocumentStatus", "CurrentStatus")
                         .WithMany()
                         .HasForeignKey("DocumentCurrentStatusId")
@@ -575,12 +827,7 @@ namespace UniSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_documents_users_resolved_by_user_id");
 
-                    b.HasOne("UniSystem.Domain.Entities.StudentProfile", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_documents_student_profiles_student_id");
+                    b.Navigation("Author");
 
                     b.Navigation("CurrentStatus");
 
@@ -591,8 +838,6 @@ namespace UniSystem.Infrastructure.Migrations
                     b.Navigation("ResolvedByUser");
 
                     b.Navigation("SecretaryStatus");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("UniSystem.Domain.Entities.DocumentAttachment", b =>
@@ -624,10 +869,10 @@ namespace UniSystem.Infrastructure.Migrations
 
                     b.HasOne("UniSystem.Domain.Entities.User", "User")
                         .WithOne("StaffProfile")
-                        .HasForeignKey("UniSystem.Domain.Entities.StaffProfile", "UserId")
+                        .HasForeignKey("UniSystem.Domain.Entities.StaffProfile", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_staff_profiles_users_user_id");
+                        .HasConstraintName("fk_staff_profiles_asp_net_users_id");
 
                     b.Navigation("AcademicGroup");
 
@@ -666,6 +911,13 @@ namespace UniSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_student_profiles_academic_groups_academic_group_id");
 
+                    b.HasOne("UniSystem.Domain.Entities.User", "User")
+                        .WithOne("StudentProfile")
+                        .HasForeignKey("UniSystem.Domain.Entities.StudentProfile", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_student_profiles_asp_net_users_id");
+
                     b.HasOne("UniSystem.Domain.Entities.StudentStatus", "StudentStatus")
                         .WithMany()
                         .HasForeignKey("StudentStatusId")
@@ -673,30 +925,11 @@ namespace UniSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_student_profiles_student_statuses_student_status_id");
 
-                    b.HasOne("UniSystem.Domain.Entities.User", "User")
-                        .WithOne("StudentProfile")
-                        .HasForeignKey("UniSystem.Domain.Entities.StudentProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_student_profiles_users_user_id");
-
                     b.Navigation("AcademicGroup");
 
                     b.Navigation("StudentStatus");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("UniSystem.Domain.Entities.User", b =>
-                {
-                    b.HasOne("UniSystem.Domain.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_users_roles_role_id");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("UniSystem.Domain.Entities.AcademicGroup", b =>

@@ -1,13 +1,13 @@
 namespace UniSystem.Domain.Exceptions;
 
 public class InvalidAttachmentFileNameException(string fileName) : DomainException(
-    $"Имя файла '{fileName}' невалидно.")
+    $"Invalid file name '{fileName}'.")
 { }
 
 public class InvalidAttachmentFilePathException(string path) : DomainException(
-    $"Путь к файлу '{path}' невалиден.")
+    $"Invalid file path '{path}'.")
 { }
 
 public class InvalidAttachmentFileSizeException(long size) : DomainException(
-    $"Размер файла {size} невалиден. Размер не может быть отрицательным.")
+    $"Invalid file size {size}. Size cannot be negative.")
 { }

@@ -10,7 +10,7 @@ public record GroupName
     public GroupName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new InvalidAcademicGroupNameException("Имя группы не может быть пустым.");
+            throw new InvalidAcademicGroupNameException("Group name cannot be empty.");
 
         var cleanedName = value.Trim();
 

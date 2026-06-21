@@ -2,34 +2,32 @@ using UniSystem.Domain.Enums;
 
 namespace UniSystem.Domain.Exceptions;
 
-public class InvalidUserEmailException(string email) : DomainException(
-    $"Email '{email}' имеет неверный формат.")
-{ }
-
-public class InvalidUserPasswordHashException() : DomainException(
-    "Хэш пароля не может быть пустым.")
-{ }
-
 public class InvalidUserFirstNameException(string firstName) : DomainException(
-    $"Имя '{firstName}' невалидно. Имя должно быть непустым и не более 50 символов.")
+    $"Invalid first name '{firstName}'. First name must be non-empty and at most 50 characters.")
 { }
 
 public class InvalidUserLastNameException(string lastName) : DomainException(
-    $"Фамилия '{lastName}' невалидна. Фамилия должна быть непустой и не более 55 символов.")
+    $"Invalid last name '{lastName}'. Last name must be non-empty and at most 55 characters.")
 { }
 
 public class InvalidUserPatronymicException(string patronymic) : DomainException(
-    $"Отчество '{patronymic}' невалидно. Отчество должно быть непустым и не более 60 символов.")
+    $"Invalid patronymic '{patronymic}'. Patronymic must be non-empty and at most 60 characters.")
 { }
 
 public class InvalidUserSexException(Sex sex) : DomainException(
-    $"Указано неопределенное значение пола: '{sex}'.")
+    $"Invalid sex value: '{sex}'.")
 { }
 
 public class InvalidUserIconException(string path) : DomainException(
-    $"Путь к иконке '{path}' невалиден.")
+    $"Invalid icon path '{path}'.")
 { }
 
-public class InvalidUserRoleIdException(int roleId) : DomainException(
-    $"Указан невалидный ID роли: {roleId}.")
+public class UserAlreadyHasStudentProfileException() : DomainException(
+    "User already has a student profile.")
 { }
+
+public class UserAlreadyHasStaffProfileException() : DomainException(
+    "User already has a staff profile.")
+{ }
+
+

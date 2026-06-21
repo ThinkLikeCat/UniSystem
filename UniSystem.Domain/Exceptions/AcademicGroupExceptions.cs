@@ -1,6 +1,4 @@
-﻿using UniSystem.Domain.ValueObjects;
-
-namespace UniSystem.Domain.Exceptions;
+﻿namespace UniSystem.Domain.Exceptions;
 
 public class InvalidAcademicGroupNameException(string groupName) : DomainException(
     $"Invalid academic group name: '{groupName}'. Name must be non-empty and at most 20 characters.") 
@@ -11,22 +9,22 @@ public class GroupSizeOutOfRangeException(int count, int min, int max) : DomainE
 { }
 
 public class InvalidSpecialtyReferenceException(int specialtyId) : DomainException(
-    $"Указан невалидный Id специальности: {specialtyId}.")
+    $"Invalid specialty ID: {specialtyId}.")
 { }
 
-public class StudentAlreadyInGroupException(StudentId studentId, string groupName) : DomainException(
-    $"Студент с Id {studentId.Value} уже состоит в группе '{groupName}'.")
+public class StudentAlreadyInGroupException(Guid studentId, string groupName) : DomainException(
+    $"Student with ID {studentId} is already in group '{groupName}'.")
 { }
 
 public class GroupIsFullException(string groupName) : DomainException(
-    $"Группа '{groupName}' переполнена.")
+    $"Group '{groupName}' is full.")
 { }
 
-public class StudentNotInGroupException(StudentId studentId, string groupName) : DomainException(
-    $"Студент с ID {studentId.Value} не принадлежит группе '{groupName}'.")
+public class StudentNotInGroupException(Guid studentId, string groupName) : DomainException(
+    $"Student with ID {studentId} does not belong to group '{groupName}'.")
 { }
 
 public class CourseOutOfRangeException(short course) : DomainException(
-    $"Курс {course} невалиден. Допустимый диапазон: от 1 до 6.")
+    $"Course {course} is out of range. Allowed range is 1 to 6.")
 { }
 

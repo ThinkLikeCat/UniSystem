@@ -47,7 +47,7 @@ public class AcademicGroup
     public void RemoveStudent(StudentProfile student)
     {
         if (student is null)
-            throw new ArgumentNullException(nameof(student), "Студент не может быть null.");
+            throw new ArgumentNullException(nameof(student), "Student cannot be null.");
         
         if (!_students.Contains(student))
             throw new StudentNotInGroupException(student.Id, Name.Value);
