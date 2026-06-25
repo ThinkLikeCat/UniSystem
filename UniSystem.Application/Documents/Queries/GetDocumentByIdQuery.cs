@@ -8,6 +8,7 @@ namespace UniSystem.Application.Documents.Queries;
 
 public record DocumentDetailDto(
     Guid Id,
+    int DocumentTypeId,
     string AuthorName,
     string DocumentTypeName,
     string CurrentStatusName,
@@ -53,6 +54,7 @@ public class GetDocumentByIdQueryHandler : IRequestHandler<GetDocumentByIdQuery,
 
         return new DocumentDetailDto(
             document.Id.Value,
+            document.DocumentType.Id,
             document.Author.FullName,
             document.DocumentType.Name.Value,
             document.CurrentStatus.Name.Value,

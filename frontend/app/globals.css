@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary-dark: #1E3A8A;
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-active: #1E40AF;
+
+  --color-hero-bg: #F0F4F8;
+  --color-hero-text: #334155;
+
+  --color-card-bg: #FFFFFF;
+  --color-card-border: #E2E8F0;
+
+  --color-input-bg: #F8FAFC;
+  --color-input-border: #CBD5E1;
+
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+
+  --color-pattern-light: #E9EDF5;
+  --color-pattern-accent: #6C7A9C;
+
+  --color-status-draft: #94A3B8;
+  --color-status-secretary: #D97706;
+  --color-status-rework: #F97316;
+  --color-status-dean: #0E7490;
+  --color-status-approved: #059669;
+  --color-status-rejected: #DC2626;
+
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+  --color-error-text: #DC2626;
+
+  --color-success: #059669;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+
+  --color-table-hover: #F1F5F9;
+  --color-divider: #E2E8F0;
+
+  --color-header-bg: #1E3A8A;
+  --color-header-text: #FFFFFF;
+  --color-header-text-muted: rgba(255, 255, 255, 0.7);
+
+  --radius-card: 16px;
+  --radius-input: 16px;
+  --radius-button: 16px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0px 10px 30px rgba(30, 58, 138, 0.08);
+  --shadow-card-inset: inset 0px 2px 0px #FFFFFF;
+  --shadow-button: 0px 8px 20px rgba(37, 99, 235, 0.35);
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+
+body {
+  background: var(--color-hero-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-card-border);
+  }
+}
