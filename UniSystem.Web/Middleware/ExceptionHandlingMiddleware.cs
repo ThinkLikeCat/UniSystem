@@ -30,12 +30,18 @@ public class ExceptionHandlingMiddleware : IMiddleware
             var response = new { error = ex.Message };
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            var logger = context.RequestServices.GetRequiredService<ILogger<ExceptionHandlingMiddleware>>();
+            logger.LogError(ex, "Unhandled exception occurred.");
+
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
 
-            var response = new { error = "Internal server error." };
+            var env = context.RequestServices.GetRequiredService<IWebHostEnvironment>();
+            var response = env.IsDevelopment()
+                ? (object)new { error = "Internal server error.", type = ex.GetType().Name, message = ex.Message }
+                : new { error = "Internal server error." };
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }

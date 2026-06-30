@@ -69,10 +69,10 @@ public class GetDocumentTypeTemplateQueryHandler : IRequestHandler<GetDocumentTy
 
         var systemValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            { "{student_name}", studentData.FullName ?? string.Empty },
-            { "{group_name}",   studentData.GroupName ?? string.Empty },
-            { "{course}",       studentData.Course?.ToString() ?? string.Empty },
-            { "{specialty}",    studentData.Specialty ?? string.Empty }
+            { "student_name", studentData.FullName ?? string.Empty },
+            { "group_name",   studentData.GroupName ?? string.Empty },
+            { "course",       studentData.Course?.ToString() ?? string.Empty },
+            { "specialty",    studentData.Specialty ?? string.Empty }
         };
 
         var matches = Regex.Matches(documentType.TemplateText.Value, @"\{[a-zA-Z0-9_]+\}");
@@ -81,7 +81,7 @@ public class GetDocumentTypeTemplateQueryHandler : IRequestHandler<GetDocumentTy
 
         foreach (Match match in matches)
         {
-            var placeholder = match.Value;
+            var placeholder = match.Value.Trim('{', '}');
             if (systemValues.TryGetValue(placeholder, out var systemValue))
                 systemFields[placeholder] = systemValue;
             else

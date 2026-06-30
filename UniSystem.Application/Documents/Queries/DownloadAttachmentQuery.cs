@@ -24,7 +24,7 @@ public class DownloadAttachmentQueryHandler : IRequestHandler<DownloadAttachment
     public async Task<DownloadAttachmentDto> Handle(DownloadAttachmentQuery request, CancellationToken ct)
     {
         var attachment = await _context.DocumentAttachments
-            .FirstOrDefaultAsync(a => a.Id.Value == request.AttachmentId, ct);
+            .FirstOrDefaultAsync(a => a.Id == new AttachmentId(request.AttachmentId), ct);
 
         if (attachment is null)
             throw new DomainException("File not found.");

@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Application.Documents.Commands;
 
@@ -30,7 +31,7 @@ public class DeleteAttachmentCommandHandler : IRequestHandler<DeleteAttachmentCo
         var attachment = await _context.DocumentAttachments
             .Include(a => a.Document)
                 .ThenInclude(d => d.CurrentStatus)
-            .FirstOrDefaultAsync(a => a.Id.Value == request.AttachmentId, ct);
+            .FirstOrDefaultAsync(a => a.Id == new AttachmentId(request.AttachmentId), ct);
 
         if (attachment is null)
             throw new DomainException("File not found.");

@@ -14,11 +14,23 @@ export async function uploadAttachment(
   return response.data;
 }
 
-export async function getAttachmentDownloadUrl(
+export async function downloadAttachment(
   documentId: string,
-  attachmentId: string
-): Promise<string> {
-  return `${api.defaults.baseURL}/documents/${documentId}/attachments/${attachmentId}`;
+  attachmentId: string,
+  fileName: string
+): Promise<void> {
+  const response = await api.get(
+    `/documents/${documentId}/attachments/${attachmentId}`,
+    { responseType: "blob" }
+  );
+  const url = URL.createObjectURL(response.data);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 export async function deleteAttachment(

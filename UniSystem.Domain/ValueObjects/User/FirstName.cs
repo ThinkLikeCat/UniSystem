@@ -20,5 +20,6 @@ public record FirstName
         Value = cleaned;
     }
     
+    public override string ToString() => Value;
     public static implicit operator string(FirstName firstName) => firstName.Value;
 }

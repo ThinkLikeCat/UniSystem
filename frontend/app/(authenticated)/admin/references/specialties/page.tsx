@@ -30,7 +30,7 @@ export default function SpecialtiesPage() {
       const data = await getSpecialties();
       setItems(data);
     } catch {
-      // silent
+      setError("Ошибка загрузки данных");
     } finally {
       setLoading(false);
     }
@@ -77,8 +77,8 @@ export default function SpecialtiesPage() {
       } else {
         await createSpecialty(data);
       }
-      setModalOpen(false);
       await fetchItems();
+      setModalOpen(false);
     } catch {
       setError("Ошибка при сохранении");
     } finally {
@@ -119,6 +119,11 @@ export default function SpecialtiesPage() {
         </Button>
       </div>
 
+      {error && !modalOpen && (
+        <div className="bg-error-bg border border-error-border rounded-[12px] px-4 py-3 text-sm text-error-text">
+          {error}
+        </div>
+      )}
       <div
         className="bg-card-bg border border-card-border p-4"
         style={{

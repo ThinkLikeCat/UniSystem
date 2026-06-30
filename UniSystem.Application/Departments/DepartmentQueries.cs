@@ -20,10 +20,10 @@ public class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQuery, L
 
     public async Task<List<DepartmentDto>> Handle(GetDepartmentsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Departments
-            .OrderBy(d => d.Name.Value)
-            .Select(d => new DepartmentDto(d.Id, d.Name.Value))
+        var entities = await _context.Departments
+            .OrderBy(d => d.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(d => new DepartmentDto(d.Id, d.Name.Value)).ToList();
     }
 }
 

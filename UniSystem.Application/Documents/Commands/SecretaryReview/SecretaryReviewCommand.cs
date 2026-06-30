@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects;
+using UniSystem.Domain.ValueObjects.DocumentStatus;
 
 namespace UniSystem.Application.Documents.Commands.SecretaryReview;
 
@@ -28,7 +30,7 @@ public class SecretaryReviewCommandHandler : IRequestHandler<SecretaryReviewComm
         var document = await _context.Documents
             .Include(d => d.CurrentStatus)
             .Include(d => d.DocumentType)
-            .FirstOrDefaultAsync(d => d.Id.Value == request.DocumentId, cancellationToken);
+            .FirstOrDefaultAsync(d => d.Id == new DocumentId(request.DocumentId), cancellationToken);
 
         if (document is null)
             throw new DomainException("Document not found.");
@@ -43,7 +45,7 @@ public class SecretaryReviewCommandHandler : IRequestHandler<SecretaryReviewComm
             case SecretaryDecision.ApproveToDean:
             {
                 var deanStatus = await _context.DocumentStatuses
-                    .FirstOrDefaultAsync(s => s.Name.Value == "На проверке декана", cancellationToken);
+                    .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("На проверке декана"), cancellationToken);
 
                 if (deanStatus is null)
                     throw new DomainException("Status 'На проверке декана' not found.");
@@ -56,7 +58,7 @@ public class SecretaryReviewCommandHandler : IRequestHandler<SecretaryReviewComm
             case SecretaryDecision.ReturnToRework:
             {
                 var reworkStatus = await _context.DocumentStatuses
-                    .FirstOrDefaultAsync(s => s.Name.Value == "На доработку", cancellationToken);
+                    .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("На доработку"), cancellationToken);
 
                 if (reworkStatus is null)
                     throw new DomainException("Status 'На доработку' not found.");
@@ -73,7 +75,7 @@ public class SecretaryReviewCommandHandler : IRequestHandler<SecretaryReviewComm
             case SecretaryDecision.Reject:
             {
                 var rejectedStatus = await _context.DocumentStatuses
-                    .FirstOrDefaultAsync(s => s.Name.Value == "Отклонён", cancellationToken);
+                    .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("Отклонён"), cancellationToken);
 
                 if (rejectedStatus is null)
                     throw new DomainException("Status 'Отклонён' not found.");

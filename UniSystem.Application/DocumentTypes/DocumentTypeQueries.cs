@@ -20,10 +20,10 @@ public class GetDocumentTypesQueryHandler : IRequestHandler<GetDocumentTypesQuer
 
     public async Task<List<DocumentTypeDto>> Handle(GetDocumentTypesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.DocumentTypes
-            .OrderBy(t => t.Name.Value)
-            .Select(t => new DocumentTypeDto(t.Id, t.Name.Value, t.RequiresAttachments, t.TemplateText.Value))
+        var entities = await _context.DocumentTypes
+            .OrderBy(t => t.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(t => new DocumentTypeDto(t.Id, t.Name.Value, t.RequiresAttachments, t.TemplateText.Value)).ToList();
     }
 }
 

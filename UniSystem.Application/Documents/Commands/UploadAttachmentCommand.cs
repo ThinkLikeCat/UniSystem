@@ -31,7 +31,7 @@ public class UploadAttachmentCommandHandler : IRequestHandler<UploadAttachmentCo
 
         var document = await _context.Documents
             .Include(d => d.CurrentStatus)
-            .FirstOrDefaultAsync(d => d.Id.Value == request.DocumentId, ct);
+            .FirstOrDefaultAsync(d => d.Id == new DocumentId(request.DocumentId), ct);
 
         if (document is null)
             throw new DomainException("Document not found.");

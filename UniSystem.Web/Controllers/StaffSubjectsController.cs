@@ -24,7 +24,7 @@ public class StaffSubjectsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Secretary,Dean")]
     public async Task<IActionResult> Create([FromBody] CreateStaffSubjectCommand command)
     {
         await _mediator.Send(command);
@@ -32,7 +32,7 @@ public class StaffSubjectsController : ControllerBase
     }
 
     [HttpDelete("{staffId}/{subjectId}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Secretary,Dean")]
     public async Task<IActionResult> Delete(Guid staffId, int subjectId)
     {
         await _mediator.Send(new DeleteStaffSubjectCommand(staffId, subjectId));

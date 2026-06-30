@@ -20,5 +20,6 @@ public record Patronymic
         Value = cleaned;
     }
     
+    public override string ToString() => Value;
     public static implicit operator string(Patronymic patronymic) => patronymic.Value;
 }

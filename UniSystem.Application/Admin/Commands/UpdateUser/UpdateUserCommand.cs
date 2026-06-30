@@ -14,7 +14,11 @@ public record UpdateUserCommand(
     string? LastName = null,
     string? Patronymic = null,
     Sex? Sex = null,
-    SystemRoleName? Role = null
+    SystemRoleName? Role = null,
+    string? StudentTicket = null,
+    int? AcademicGroupId = null,
+    int? StudentStatusId = null,
+    int? DepartmentId = null
 ) : IRequest;
 
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
@@ -65,6 +69,54 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
                 if (user.StaffProfile is not null)
                     _context.StaffProfiles.Remove(user.StaffProfile);
             }
+            else if (targetRole == SystemRoleName.StudentProfile)
+            {
+                if (user.StaffProfile is not null)
+                {
+                    _context.StaffProfiles.Remove(user.StaffProfile);
+                    _context.Entry(user).Reference(u => u.StaffProfile).CurrentValue = null;
+                }
+
+                if (user.StudentProfile is null)
+                {
+                    if (request.StudentTicket is null || request.AcademicGroupId is null || request.StudentStatusId is null)
+                        throw new DomainException("Student profile requires: StudentTicket, AcademicGroupId, StudentStatusId.");
+                    user.CreateStudentProfile(request.StudentTicket, request.AcademicGroupId.Value, request.StudentStatusId.Value);
+                }
+            }
+            else
+            {
+                if (user.StudentProfile is not null)
+                {
+                    _context.StudentProfiles.Remove(user.StudentProfile);
+                    _context.Entry(user).Reference(u => u.StudentProfile).CurrentValue = null;
+                }
+
+                if (user.StaffProfile is null)
+                {
+                    if (request.DepartmentId is null)
+                        throw new DomainException("Staff profile requires DepartmentId.");
+                    user.CreateStaffProfile(request.DepartmentId.Value, request.AcademicGroupId);
+                }
+            }
+        }
+
+        if (user.StudentProfile is not null)
+        {
+            if (request.StudentTicket is not null)
+                _context.Entry(user.StudentProfile).Property("StudentTicket").CurrentValue = request.StudentTicket;
+            if (request.AcademicGroupId is not null)
+                _context.Entry(user.StudentProfile).Property("AcademicGroupId").CurrentValue = request.AcademicGroupId.Value;
+            if (request.StudentStatusId is not null)
+                _context.Entry(user.StudentProfile).Property("StudentStatusId").CurrentValue = request.StudentStatusId.Value;
+        }
+
+        if (user.StaffProfile is not null)
+        {
+            if (request.DepartmentId is not null)
+                _context.Entry(user.StaffProfile).Property("DepartmentId").CurrentValue = request.DepartmentId.Value;
+            if (request.AcademicGroupId.HasValue)
+                _context.Entry(user.StaffProfile).Property("AcademicGroupId").CurrentValue = request.AcademicGroupId.Value;
         }
 
         var updateResult = await _userManager.UpdateAsync(user);

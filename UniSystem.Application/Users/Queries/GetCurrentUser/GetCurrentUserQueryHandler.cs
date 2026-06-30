@@ -46,6 +46,7 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, C
             FullName: user.FullName,
             Sex: user.Sex.ToString(),
             Role: role,
+            IconPath: user.IconPath?.Value,
             StudentProfile: user.StudentProfile is not null
                 ? new StudentProfileResponse(
                     StudentTicket: user.StudentProfile.StudentTicket,

@@ -85,19 +85,6 @@ export default function EditDocumentPage() {
     }
   };
 
-  const addField = () => {
-    const key = prompt("Название поля (например, reason, subject):");
-    if (key && key.trim()) {
-      setDynamicValues((prev) => ({ ...prev, [key.trim()]: "" }));
-    }
-  };
-
-  const removeField = (key: string) => {
-    const next = { ...dynamicValues };
-    delete next[key];
-    setDynamicValues(next);
-  };
-
   const allFields = template?.userFields ?? [];
 
   if (loading) {
@@ -174,18 +161,9 @@ export default function EditDocumentPage() {
         }}
       >
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-text-primary">
-              Поля документа
-            </h2>
-            <button
-              type="button"
-              onClick={addField}
-              className="text-sm text-primary hover:underline"
-            >
-              + Добавить поле
-            </button>
-          </div>
+          <h2 className="font-semibold text-text-primary">
+            Поля документа
+          </h2>
 
           <div className="space-y-4">
             {allFields.length > 0 ? (
@@ -238,18 +216,9 @@ export default function EditDocumentPage() {
                 {Object.entries(dynamicValues).map(([key, value]) => (
                   <div key={key} className="flex items-start gap-3">
                     <div className="flex-1 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <label className="text-sm text-text-secondary">
-                          {userFieldLabels[key] || key}
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => removeField(key)}
-                          className="text-xs text-error-text hover:underline"
-                        >
-                          Удалить
-                        </button>
-                      </div>
+                      <label className="text-sm text-text-secondary">
+                        {userFieldLabels[key] || key}
+                      </label>
                       {key === "reason" ? (
                         <textarea
                           value={value}
@@ -283,7 +252,7 @@ export default function EditDocumentPage() {
 
                 {Object.keys(dynamicValues).length === 0 && (
                   <p className="text-sm text-text-muted text-center py-4">
-                    Нет полей. Нажмите "+ Добавить поле"
+                    Нет полей для редактирования
                   </p>
                 )}
               </>

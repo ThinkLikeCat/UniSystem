@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects;
+using UniSystem.Domain.ValueObjects.DocumentStatus;
 
 namespace UniSystem.Application.Documents.Commands.SendToReview;
 
@@ -25,7 +27,7 @@ public class SendToReviewCommandHandler : IRequestHandler<SendToReviewCommand>
         var document = await _context.Documents
             .Include(d => d.CurrentStatus)
             .Include(d => d.DocumentType)
-            .FirstOrDefaultAsync(d => d.Id.Value == request.DocumentId, cancellationToken);
+            .FirstOrDefaultAsync(d => d.Id == new DocumentId(request.DocumentId), cancellationToken);
 
         if (document is null)
             throw new DomainException("Document not found.");
@@ -41,14 +43,14 @@ public class SendToReviewCommandHandler : IRequestHandler<SendToReviewCommand>
         if (document.DocumentType.RequiresAttachments)
         {
             var attachmentCount = await _context.DocumentAttachments
-                .CountAsync(a => a.DocumentId.Value == request.DocumentId, cancellationToken);
+                .CountAsync(a => a.DocumentId == new DocumentId(request.DocumentId), cancellationToken);
 
             if (attachmentCount == 0)
                 throw new DomainException("This document type requires attached files.");
         }
 
         var secretaryStatus = await _context.DocumentStatuses
-            .FirstOrDefaultAsync(s => s.Name.Value == "На проверке секретаря", cancellationToken);
+            .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("На проверке секретаря"), cancellationToken);
 
         if (secretaryStatus is null)
             throw new DomainException("Status 'На проверке секретаря' not found.");

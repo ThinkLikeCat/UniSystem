@@ -63,6 +63,9 @@ export function Sidebar() {
 
   const isAdmin = user.role === "Admin";
   const isStudent = user.role === "StudentProfile";
+  const isSecretary = user.role === "Secretary";
+  const isDean = user.role === "Dean";
+  const canManageReferences = isAdmin || isSecretary || isDean;
 
   const linkClass = (href: string) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-[16px] text-sm transition-colors ${
@@ -153,6 +156,12 @@ export function Sidebar() {
               <BarChart3 className="w-5 h-5 shrink-0" />
               Статистика
             </Link>
+          </>
+        )}
+
+        {canManageReferences && (
+          <>
+            <div className="border-t border-white/10 my-3" />
 
             <div>
               <button

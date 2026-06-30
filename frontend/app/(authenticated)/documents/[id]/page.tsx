@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { getDocumentById, sendToReview } from "@/lib/documents";
-import { uploadAttachment, deleteAttachment } from "@/lib/attachments";
+import { getDocumentById, sendToReview, deleteDraftDocument } from "@/lib/documents";
+import { uploadAttachment, deleteAttachment, downloadAttachment } from "@/lib/attachments";
 import { Button } from "@/components/ui/Button";
 import type { DocumentDetailDto } from "@/types";
 import {
@@ -70,6 +70,16 @@ export default function DocumentDetailPage() {
       return true;
     if (isDean && doc.currentStatusName === "На проверке декана") return true;
     return false;
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Удалить черновик? Это действие нельзя отменить.")) return;
+    try {
+      await deleteDraftDocument(id);
+      router.push("/documents");
+    } catch {
+      setError("Ошибка при удалении");
+    }
   };
 
   const handleSendToReview = async () => {
@@ -311,14 +321,12 @@ export default function DocumentDetailPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <a
-                        href={`http://localhost:5000/api/documents/${id}/attachments/${att.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => downloadAttachment(id, att.id, att.fileName)}
                         className="p-2 hover:bg-card-border rounded-[8px] transition-colors"
                       >
                         <Download className="w-4 h-4 text-text-secondary" />
-                      </a>
+                      </button>
                       {canEdit && (
                         <button
                           onClick={() =>
@@ -359,6 +367,16 @@ export default function DocumentDetailPage() {
                 <FileText className="w-4 h-4" />
                 Редактировать
               </Link>
+            )}
+
+            {canEdit && doc.currentStatusName === "Черновик" && (
+              <button
+                onClick={handleDelete}
+                className="inline-flex items-center gap-2 h-12 px-6 bg-error-bg border border-error-border text-error-text rounded-[16px] font-semibold text-sm hover:bg-error-text hover:text-white transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+                Удалить черновик
+              </button>
             )}
 
             {canSendToReview && (

@@ -3,9 +3,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getUserById, updateUser, resetPassword, deleteUser } from "@/lib/admin";
+import {
+  getDepartments,
+  getAcademicGroups,
+  getStudentStatuses,
+} from "@/lib/references";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import type { UserDetailDto, Sex, SystemRoleName } from "@/types";
+import type {
+  UserDetailDto,
+  Sex,
+  SystemRoleName,
+  DepartmentDto,
+  AcademicGroupDto,
+  StudentStatusDto,
+} from "@/types";
 import { ROLE_LABELS } from "@/types";
 import {
   ArrowLeft,
@@ -33,23 +45,47 @@ export default function UserDetailPage() {
   const [sex, setSex] = useState<Sex>("Male");
   const [role, setRole] = useState("");
 
+  // profile fields
+  const [studentTicket, setStudentTicket] = useState("");
+  const [academicGroupId, setAcademicGroupId] = useState("");
+  const [studentStatusId, setStudentStatusId] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+
+  const [departments, setDepartments] = useState<DepartmentDto[]>([]);
+  const [groups, setGroups] = useState<AcademicGroupDto[]>([]);
+  const [statuses, setStudentStatuses] = useState<StudentStatusDto[]>([]);
+  const [refsLoading, setRefsLoading] = useState(true);
+
   // reset password
   const [newPassword, setNewPassword] = useState("");
   const [showReset, setShowReset] = useState(false);
 
   const fetchUser = async () => {
     try {
-      const u = await getUserById(id);
+      const [u, d, g, s] = await Promise.all([
+        getUserById(id),
+        getDepartments(),
+        getAcademicGroups(),
+        getStudentStatuses(),
+      ]);
       setUserData(u);
       setFirstName(u.firstName);
       setLastName(u.lastName);
       setPatronymic(u.patronymic || "");
       setSex(u.sex as Sex);
       setRole(u.role);
+      setStudentTicket(u.studentTicket || "");
+      setAcademicGroupId(u.academicGroupId?.toString() || "");
+      setStudentStatusId(u.studentStatusId?.toString() || "");
+      setDepartmentId(u.departmentId?.toString() || "");
+      setDepartments(d);
+      setGroups(g);
+      setStudentStatuses(s);
     } catch {
       setError("Ошибка загрузки пользователя");
     } finally {
       setLoading(false);
+      setRefsLoading(false);
     }
   };
 
@@ -62,15 +98,20 @@ export default function UserDetailPage() {
     setSaving(true);
     setError("");
     try {
+      const isStudent = role === "StudentProfile";
+      const needsProfile = role !== "Admin";
       await updateUser(id, {
         firstName,
         lastName,
         patronymic: patronymic || null,
         sex,
         role,
+        studentTicket: isStudent ? studentTicket.trim() || null : null,
+        academicGroupId: isStudent ? (academicGroupId ? Number(academicGroupId) : null) : needsProfile && role === "Curator" ? (academicGroupId ? Number(academicGroupId) : null) : null,
+        studentStatusId: isStudent ? (studentStatusId ? Number(studentStatusId) : null) : null,
+        departmentId: needsProfile && !isStudent ? (departmentId ? Number(departmentId) : null) : null,
       });
       await fetchUser();
-      alert("Сохранено");
     } catch {
       setError("Ошибка при сохранении");
     } finally {
@@ -220,6 +261,93 @@ export default function UserDetailPage() {
                 ))}
               </select>
             </div>
+
+            {refsLoading ? (
+              <div className="flex justify-center py-4">
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : role === "StudentProfile" ? (
+              <div className="border-t border-card-border pt-4 space-y-4">
+                <p className="text-sm font-semibold text-text-primary">
+                  Профиль студента
+                </p>
+                <Input
+                  label="Номер студенческого"
+                  name="studentTicket"
+                  value={studentTicket}
+                  onChange={(e) => setStudentTicket(e.target.value)}
+                  placeholder="123456"
+                />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm text-text-secondary">Группа</label>
+                  <select
+                    value={academicGroupId}
+                    onChange={(e) => setAcademicGroupId(e.target.value)}
+                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary focus:outline-none focus:border-[2px] focus:border-primary transition-all"
+                  >
+                    <option value="">Не выбрано</option>
+                    {groups.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm text-text-secondary">Статус</label>
+                  <select
+                    value={studentStatusId}
+                    onChange={(e) => setStudentStatusId(e.target.value)}
+                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary focus:outline-none focus:border-[2px] focus:border-primary transition-all"
+                  >
+                    <option value="">Не выбрано</option>
+                    {statuses.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ) : role !== "Admin" ? (
+              <div className="border-t border-card-border pt-4 space-y-4">
+                <p className="text-sm font-semibold text-text-primary">
+                  Профиль сотрудника
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm text-text-secondary">Кафедра</label>
+                  <select
+                    value={departmentId}
+                    onChange={(e) => setDepartmentId(e.target.value)}
+                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary focus:outline-none focus:border-[2px] focus:border-primary transition-all"
+                  >
+                    <option value="">Не выбрано</option>
+                    {departments.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {role === "Curator" && (
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-sm text-text-secondary">Группа (кураторство)</label>
+                    <select
+                      value={academicGroupId}
+                      onChange={(e) => setAcademicGroupId(e.target.value)}
+                      className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary focus:outline-none focus:border-[2px] focus:border-primary transition-all"
+                    >
+                      <option value="">Не выбрано</option>
+                      {groups.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {g.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            ) : null}
 
             {error && (
               <div className="bg-error-bg border border-error-border rounded-[12px] px-4 py-3 text-sm text-error-text">

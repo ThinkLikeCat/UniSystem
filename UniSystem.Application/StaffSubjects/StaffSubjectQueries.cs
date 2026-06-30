@@ -26,11 +26,11 @@ public class GetStaffSubjectsQueryHandler : IRequestHandler<GetStaffSubjectsQuer
         if (!staffExists)
             throw new DomainException("Staff profile not found.");
 
-        return await _context.StaffSubjects
+        var entities = await _context.StaffSubjects
             .Where(s => s.StaffId == request.StaffId)
             .Include(s => s.Subject)
-            .OrderBy(s => s.Subject.Name.Value)
-            .Select(s => new StaffSubjectDto(s.StaffId, s.SubjectId, s.Subject.Name.Value))
+            .OrderBy(s => s.Subject.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(s => new StaffSubjectDto(s.StaffId, s.SubjectId, s.Subject.Name.Value)).ToList();
     }
 }

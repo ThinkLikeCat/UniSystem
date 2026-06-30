@@ -37,7 +37,7 @@ public class DocumentTypesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Secretary,Dean")]
     public async Task<ActionResult<int>> Create([FromBody] CreateDocumentTypeCommand command)
     {
         var id = await _mediator.Send(command);
@@ -45,18 +45,16 @@ public class DocumentTypesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Secretary,Dean")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateDocumentTypeCommand command)
     {
-        if (command.Id != id)
-            return BadRequest("ID in URL and request body do not match.");
-
+        command = command with { Id = id };
         await _mediator.Send(command);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Secretary,Dean")]
     public async Task<IActionResult> Delete(int id)
     {
         await _mediator.Send(new DeleteDocumentTypeCommand(id));

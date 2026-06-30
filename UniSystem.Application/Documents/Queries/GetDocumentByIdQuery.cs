@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Entities;
 using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Application.Documents.Queries;
 
@@ -47,7 +48,7 @@ public class GetDocumentByIdQueryHandler : IRequestHandler<GetDocumentByIdQuery,
             .Include(d => d.DeanStatus)
             .Include(d => d.ResolvedByUser)
             .Include(d => d.Attachments)
-            .FirstOrDefaultAsync(d => d.Id.Value == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(d => d.Id == new DocumentId(request.Id), cancellationToken);
 
         if (document is null)
             throw new DomainException("Document not found.");

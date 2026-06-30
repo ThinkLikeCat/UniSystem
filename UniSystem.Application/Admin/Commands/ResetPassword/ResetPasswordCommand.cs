@@ -22,11 +22,17 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand>
         if (user is null)
             throw new DomainException("User not found.");
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
-        if (!result.Succeeded)
+        var removeResult = await _userManager.RemovePasswordAsync(user);
+        if (!removeResult.Succeeded)
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            var errors = string.Join("; ", removeResult.Errors.Select(e => e.Description));
+            throw new DomainException($"Failed to reset password: {errors}");
+        }
+
+        var addResult = await _userManager.AddPasswordAsync(user, request.NewPassword);
+        if (!addResult.Succeeded)
+        {
+            var errors = string.Join("; ", addResult.Errors.Select(e => e.Description));
             throw new DomainException($"Failed to reset password: {errors}");
         }
     }

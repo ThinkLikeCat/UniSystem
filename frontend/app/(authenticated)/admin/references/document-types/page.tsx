@@ -30,7 +30,7 @@ export default function DocumentTypesPage() {
       const data = await getDocumentTypes();
       setItems(data);
     } catch {
-      // silent
+      setError("Ошибка загрузки данных");
     } finally {
       setLoading(false);
     }
@@ -72,8 +72,8 @@ export default function DocumentTypesPage() {
       } else {
         await createDocumentType(data);
       }
-      setModalOpen(false);
       await fetchItems();
+      setModalOpen(false);
     } catch {
       setError("Ошибка при сохранении");
     } finally {
@@ -112,6 +112,11 @@ export default function DocumentTypesPage() {
         </Button>
       </div>
 
+      {error && !modalOpen && (
+        <div className="bg-error-bg border border-error-border rounded-[12px] px-4 py-3 text-sm text-error-text">
+          {error}
+        </div>
+      )}
       <div
         className="bg-card-bg border border-card-border p-4"
         style={{

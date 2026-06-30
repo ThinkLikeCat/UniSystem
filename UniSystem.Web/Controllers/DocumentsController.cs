@@ -55,6 +55,14 @@ public class DocumentsController : ControllerBase
         return NoContent();
     }
 
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "StudentProfile")]
+    public async Task<IActionResult> DeleteDraft(Guid id)
+    {
+        await _mediator.Send(new DeleteDraftDocumentCommand(id));
+        return NoContent();
+    }
+
     [HttpPost("{id}/send-to-review")]
     [Authorize(Roles = "StudentProfile")]
     public async Task<IActionResult> SendToReview(Guid id)

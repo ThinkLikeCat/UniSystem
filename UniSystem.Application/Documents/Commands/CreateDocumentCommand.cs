@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Entities;
 using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects.DocumentStatus;
 using UniSystem.Domain.ValueObjects;
 
 namespace UniSystem.Application.Documents.Commands;
@@ -34,7 +35,7 @@ public class CreateDocumentCommandHandler : IRequestHandler<CreateDocumentComman
             throw new DomainException("Document type not found.");
 
         var draftStatus = await _context.DocumentStatuses
-            .FirstOrDefaultAsync(s => s.Name.Value == "Черновик", cancellationToken);
+            .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("Черновик"), cancellationToken);
 
         if (draftStatus is null)
             throw new DomainException("Status 'Черновик' not found. Run SeedData.");

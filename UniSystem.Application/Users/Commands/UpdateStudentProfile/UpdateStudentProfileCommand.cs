@@ -6,9 +6,7 @@ using UniSystem.Domain.Exceptions;
 namespace UniSystem.Application.Users.Commands.UpdateStudentProfile;
 
 public record UpdateStudentProfileCommand(
-    string? StudentTicket = null,
-    int? AcademicGroupId = null,
-    int? StudentStatusId = null
+    string? StudentTicket = null
 ) : IRequest;
 
 public class UpdateStudentProfileCommandHandler : IRequestHandler<UpdateStudentProfileCommand>
@@ -34,12 +32,6 @@ public class UpdateStudentProfileCommandHandler : IRequestHandler<UpdateStudentP
 
         if (request.StudentTicket is not null)
             _context.Entry(profile).Property("StudentTicket").CurrentValue = request.StudentTicket;
-
-        if (request.AcademicGroupId is not null)
-            _context.Entry(profile).Property("AcademicGroupId").CurrentValue = request.AcademicGroupId.Value;
-
-        if (request.StudentStatusId is not null)
-            _context.Entry(profile).Property("StudentStatusId").CurrentValue = request.StudentStatusId.Value;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

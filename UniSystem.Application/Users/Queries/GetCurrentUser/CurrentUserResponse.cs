@@ -9,6 +9,7 @@ public record CurrentUserResponse(
     string FullName,
     string Sex,
     string Role,
+    string? IconPath,
     StudentProfileResponse? StudentProfile,
     StaffProfileResponse? StaffProfile
 );

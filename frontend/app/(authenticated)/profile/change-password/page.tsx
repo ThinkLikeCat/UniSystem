@@ -47,8 +47,15 @@ export default function ChangePasswordPage() {
       setTimeout(() => {
         logout();
       }, 2000);
-    } catch {
-      setError("Неверный текущий пароль");
+    } catch (err: unknown) {
+      const data =
+        err && typeof err === "object" && "response" in err
+          ? (err as any).response?.data
+          : null;
+      const msg = data?.details
+        ? (data.details as string[]).join("; ")
+        : data?.error;
+      setError(msg || "Неверный текущий пароль");
     } finally {
       setSaving(false);
     }
@@ -98,14 +105,20 @@ export default function ChangePasswordPage() {
               placeholder="Введите текущий пароль"
             />
 
-            <Input
-              label="Новый пароль"
-              name="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Введите новый пароль (мин. 6 символов)"
-            />
+            <div>
+              <Input
+                label="Новый пароль"
+                name="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Введите новый пароль (мин. 6 символов)"
+              />
+              <p className="mt-1 text-xs text-text-muted">
+                Пароль должен содержать минимум 6 символов, заглавную и строчную
+                буквы, цифру и спецсимвол
+              </p>
+            </div>
 
             <Input
               label="Подтверждение пароля"

@@ -54,9 +54,9 @@ export function LoginForm() {
       await login({ email: email.trim(), password });
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
-        const axiosErr = err as { response?: { status?: number } };
-        if (axiosErr.response?.status === 401) {
-          setError("Неверный email или пароль");
+        const axiosErr = err as { response?: { status?: number; data?: { error?: string } } };
+        if (axiosErr.response?.status === 401 || axiosErr.response?.status === 400) {
+          setError(axiosErr.response?.data?.error || "Неверный email или пароль");
         } else {
           setError("Ошибка сервера. Попробуйте позже");
         }

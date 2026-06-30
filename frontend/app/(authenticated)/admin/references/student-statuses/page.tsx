@@ -28,7 +28,7 @@ export default function StudentStatusesPage() {
       const data = await getStudentStatuses();
       setItems(data);
     } catch {
-      // silent
+      setError("Ошибка загрузки данных");
     } finally {
       setLoading(false);
     }
@@ -65,8 +65,8 @@ export default function StudentStatusesPage() {
       } else {
         await createStudentStatus(name.trim());
       }
-      setModalOpen(false);
       await fetchItems();
+      setModalOpen(false);
     } catch {
       setError("Ошибка при сохранении");
     } finally {
@@ -105,6 +105,11 @@ export default function StudentStatusesPage() {
         </Button>
       </div>
 
+      {error && !modalOpen && (
+        <div className="bg-error-bg border border-error-border rounded-[12px] px-4 py-3 text-sm text-error-text">
+          {error}
+        </div>
+      )}
       <div
         className="bg-card-bg border border-card-border p-4"
         style={{

@@ -6,12 +6,8 @@ import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { updateStudentProfile, updateStaffProfile } from "@/lib/profile";
-import { getAcademicGroups, getStudentStatuses, getDepartments } from "@/lib/references";
-import type {
-  AcademicGroupDto,
-  StudentStatusDto,
-  DepartmentDto,
-} from "@/types";
+import { getDepartments } from "@/lib/references";
+import type { DepartmentDto } from "@/types";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 export default function ProfileEditPage() {
@@ -19,15 +15,11 @@ export default function ProfileEditPage() {
   const router = useRouter();
 
   // references
-  const [groups, setGroups] = useState<AcademicGroupDto[]>([]);
-  const [statuses, setStatuses] = useState<StudentStatusDto[]>([]);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
   const [refsLoading, setRefsLoading] = useState(true);
 
   // form state
   const [studentTicket, setStudentTicket] = useState("");
-  const [academicGroupId, setAcademicGroupId] = useState("");
-  const [studentStatusId, setStudentStatusId] = useState("");
   const [departmentId, setDepartmentId] = useState("");
 
   const [saving, setSaving] = useState(false);
@@ -39,13 +31,7 @@ export default function ProfileEditPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [g, s, d] = await Promise.all([
-          getAcademicGroups(),
-          getStudentStatuses(),
-          getDepartments(),
-        ]);
-        setGroups(g);
-        setStatuses(s);
+        const d = await getDepartments();
         setDepartments(d);
       } catch {
         // silent
@@ -60,12 +46,9 @@ export default function ProfileEditPage() {
     if (!user) return;
     if (isStudent && user.studentProfile) {
       setStudentTicket(user.studentProfile.studentTicket || "");
-      setAcademicGroupId(String(user.studentProfile.academicGroupId || ""));
-      setStudentStatusId(String(user.studentProfile.studentStatusId || ""));
     }
     if (!isStudent && user.staffProfile) {
       setDepartmentId(String(user.staffProfile.departmentId || ""));
-      setAcademicGroupId(String(user.staffProfile.academicGroupId || ""));
     }
   }, [user, isStudent]);
 
@@ -81,13 +64,10 @@ export default function ProfileEditPage() {
       if (isStudent) {
         await updateStudentProfile({
           studentTicket: studentTicket || null,
-          academicGroupId: academicGroupId ? Number(academicGroupId) : null,
-          studentStatusId: studentStatusId ? Number(studentStatusId) : null,
         });
       } else {
         await updateStaffProfile({
           departmentId: departmentId ? Number(departmentId) : null,
-          academicGroupId: academicGroupId ? Number(academicGroupId) : null,
         });
       }
       setSuccess("Профиль обновлён");
@@ -127,89 +107,31 @@ export default function ProfileEditPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             {isStudent ? (
-              <>
-                <Input
-                  label="Номер студенческого"
-                  name="studentTicket"
-                  value={studentTicket}
-                  onChange={(e) => setStudentTicket(e.target.value)}
-                  placeholder="123456"
-                />
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm text-text-secondary">
-                    Группа
-                  </label>
-                  <select
-                    value={academicGroupId}
-                    onChange={(e) => setAcademicGroupId(e.target.value)}
-                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[2px] focus:border-primary transition-all duration-200"
-                  >
-                    <option value="">Не выбрано</option>
-                    {groups.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.name} ({g.specialtyName})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm text-text-secondary">
-                    Статус
-                  </label>
-                  <select
-                    value={studentStatusId}
-                    onChange={(e) => setStudentStatusId(e.target.value)}
-                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[2px] focus:border-primary transition-all duration-200"
-                  >
-                    <option value="">Не выбрано</option>
-                    {statuses.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </>
+              <Input
+                label="Номер студенческого"
+                name="studentTicket"
+                value={studentTicket}
+                onChange={(e) => setStudentTicket(e.target.value)}
+                placeholder="123456"
+              />
             ) : (
-              <>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm text-text-secondary">
-                    Кафедра
-                  </label>
-                  <select
-                    value={departmentId}
-                    onChange={(e) => setDepartmentId(e.target.value)}
-                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[2px] focus:border-primary transition-all duration-200"
-                  >
-                    <option value="">Не выбрано</option>
-                    {departments.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm text-text-secondary">
-                    Группа
-                  </label>
-                  <select
-                    value={academicGroupId}
-                    onChange={(e) => setAcademicGroupId(e.target.value)}
-                    className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[2px] focus:border-primary transition-all duration-200"
-                  >
-                    <option value="">Не выбрано</option>
-                    {groups.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.name} ({g.specialtyName})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm text-text-secondary">
+                  Кафедра
+                </label>
+                <select
+                  value={departmentId}
+                  onChange={(e) => setDepartmentId(e.target.value)}
+                  className="w-full h-12 px-4 bg-input-bg border border-input-border rounded-[16px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[2px] focus:border-primary transition-all duration-200"
+                >
+                  <option value="">Не выбрано</option>
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
 
             {error && (

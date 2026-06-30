@@ -20,10 +20,10 @@ public class GetStudentStatusesQueryHandler : IRequestHandler<GetStudentStatuses
 
     public async Task<List<StudentStatusDto>> Handle(GetStudentStatusesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.StudentStatuses
-            .OrderBy(s => s.Name.Value)
-            .Select(s => new StudentStatusDto(s.Id, s.Name.Value))
+        var entities = await _context.StudentStatuses
+            .OrderBy(s => s.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(s => new StudentStatusDto(s.Id, s.Name.Value)).ToList();
     }
 }
 

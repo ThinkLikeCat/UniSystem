@@ -40,6 +40,10 @@ export async function updateUser(
     patronymic?: string | null;
     sex?: string;
     role?: string;
+    studentTicket?: string | null;
+    academicGroupId?: number | null;
+    studentStatusId?: number | null;
+    departmentId?: number | null;
   }
 ): Promise<void> {
   await api.put(`/admin/users/${id}`, data);

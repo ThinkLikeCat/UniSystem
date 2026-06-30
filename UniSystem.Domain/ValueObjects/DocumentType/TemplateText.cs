@@ -14,8 +14,7 @@ public sealed record TemplateText
         "{subject}", "{reason}"
     };
     
-    private static readonly string[] StrictlyRequired = ["{student_name}", "{group_name}", "{reason}"];
-
+    
     public string Value { get; private set; }
 
     public TemplateText(string value)
@@ -35,12 +34,6 @@ public sealed record TemplateText
         {
             if (!AllowedPlaceholders.Contains(placeholder))
                 throw new UnknownTemplatePlaceholderException(placeholder);
-        }
-        
-        foreach (var required in StrictlyRequired)
-        {
-            if (!templatePlaceholders.Contains(required))
-                throw new MissingRequiredTemplatePlaceholderException(required);
         }
 
         Value = cleaned;

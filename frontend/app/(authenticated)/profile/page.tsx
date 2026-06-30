@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { ROLE_LABELS, type SystemRoleName } from "@/types";
+import { uploadAvatar } from "@/lib/profile";
 import {
   User,
   Mail,
@@ -14,27 +16,65 @@ import {
   Edit3,
   Key,
   Calendar,
+  Camera,
 } from "lucide-react";
 
 export default function ProfilePage() {
   const { user } = useAuth();
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user?.iconPath) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { default: api } = await import("@/lib/api");
+        const res = await api.get("/profile/avatar", { responseType: "blob" });
+        if (!cancelled) setAvatarSrc(URL.createObjectURL(res.data));
+      } catch {
+        if (!cancelled) setAvatarSrc(null);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user?.iconPath]);
 
   if (!user) return null;
 
   const profile = user.studentProfile || user.staffProfile;
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Файл не должен превышать 5 МБ");
+      return;
+    }
+    setAvatarUploading(true);
+    try {
+      await uploadAvatar(file);
+      window.location.reload();
+    } catch {
+      alert("Ошибка при загрузке аватарки");
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-text-primary">Профиль</h1>
         <div className="flex gap-3">
-          <Link
-            href="/profile/edit"
-            className="inline-flex items-center gap-2 h-12 px-6 bg-primary text-white rounded-[16px] font-semibold text-sm shadow-[0px_8px_20px_rgba(37,99,235,0.35)] hover:bg-primary-hover transition-colors"
-          >
-            <Edit3 className="w-4 h-4" />
-            Редактировать
-          </Link>
+          {user.role !== "StudentProfile" && (
+            <Link
+              href="/profile/edit"
+              className="inline-flex items-center gap-2 h-12 px-6 bg-primary text-white rounded-[16px] font-semibold text-sm shadow-[0px_8px_20px_rgba(37,99,235,0.35)] hover:bg-primary-hover transition-colors"
+            >
+              <Edit3 className="w-4 h-4" />
+              Редактировать
+            </Link>
+          )}
           <Link
             href="/profile/change-password"
             className="inline-flex items-center gap-2 h-12 px-6 bg-card-bg border border-card-border text-text-primary rounded-[16px] font-semibold text-sm hover:bg-table-hover transition-colors"
@@ -53,9 +93,33 @@ export default function ProfilePage() {
         }}
       >
         <div className="px-6 py-5 flex items-center gap-4 border-b border-card-border">
-          <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">
-            {user.firstName[0]}
-            {user.lastName[0]}
+          <div className="relative shrink-0">
+            {avatarSrc ? (
+              <img
+                src={avatarSrc}
+                alt="Avatar"
+                className="w-16 h-16 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold">
+                {user.firstName[0]}
+                {user.lastName[0]}
+              </div>
+            )}
+            <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-primary text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-primary-hover transition-colors shadow-md">
+              {avatarUploading ? (
+                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Camera className="w-3.5 h-3.5" />
+              )}
+              <input
+                type="file"
+                className="hidden"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handleAvatarUpload}
+                disabled={avatarUploading}
+              />
+            </label>
           </div>
           <div>
             <h2 className="text-lg font-semibold text-text-primary">

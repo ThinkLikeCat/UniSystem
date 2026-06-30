@@ -18,6 +18,7 @@ export interface CurrentUserResponse {
   fullName: string;
   sex: Sex;
   role: SystemRoleName;
+  iconPath?: string | null;
   studentProfile?: StudentProfileResponse | null;
   staffProfile?: StaffProfileResponse | null;
 }
@@ -231,13 +232,10 @@ export interface ChangePasswordCommand {
 
 export interface UpdateStudentProfileCommand {
   studentTicket?: string | null;
-  academicGroupId?: number | null;
-  studentStatusId?: number | null;
 }
 
 export interface UpdateStaffProfileCommand {
   departmentId?: number | null;
-  academicGroupId?: number | null;
 }
 
 export interface CreateDocumentCommand {

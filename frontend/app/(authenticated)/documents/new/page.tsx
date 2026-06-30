@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getDocumentTypeTemplate, createDocument } from "@/lib/documents";
+import { uploadAttachment } from "@/lib/attachments";
 import { getDocumentTypes } from "@/lib/references";
 import { Button } from "@/components/ui/Button";
 import type { DocumentTypeDto, TemplatePreviewDto } from "@/types";
-import { ArrowLeft, FileText, Info } from "lucide-react";
+import { ArrowLeft, FileText, Info, Upload } from "lucide-react";
 
 const userFieldLabels: Record<string, string> = {
   reason: "Причина",
@@ -29,6 +30,7 @@ export default function NewDocumentPage() {
   const [loadingTemplate, setLoadingTemplate] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -94,6 +96,11 @@ export default function NewDocumentPage() {
             ? JSON.stringify(dynamicValues)
             : null,
       });
+
+      if (attachmentFile) {
+        await uploadAttachment(docId, attachmentFile);
+      }
+
       router.push(`/documents/${docId}`);
     } catch {
       setError("Ошибка при создании документа");
@@ -240,7 +247,34 @@ export default function NewDocumentPage() {
                     </div>
                   </div>
                 )}
-              </>
+
+                <div className="border-t border-card-border pt-4">
+                  <p className="text-sm font-medium text-text-primary mb-3">
+                    Вложение (необязательно)
+                  </p>
+                  <label className="inline-flex items-center gap-2 px-4 py-2.5 border border-card-border rounded-[12px] text-sm text-text-secondary hover:bg-table-hover cursor-pointer transition-colors">
+                    <Upload className="w-4 h-4" />
+                    {attachmentFile ? attachmentFile.name : "Выбрать файл"}
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.txt"
+                      onChange={(e) =>
+                        setAttachmentFile(e.target.files?.[0] || null)
+                      }
+                    />
+                  </label>
+                  {attachmentFile && (
+                    <button
+                      type="button"
+                      onClick={() => setAttachmentFile(null)}
+                      className="ml-3 text-xs text-error-text hover:underline"
+                    >
+                      Удалить
+                    </button>
+                  )}
+                </div>
+              </> 
             )}
 
             {error && (
@@ -272,6 +306,7 @@ export default function NewDocumentPage() {
 
 function getFieldLabel(key: string): string {
   const labels: Record<string, string> = {
+    ...userFieldLabels,
     student_name: "Студент",
     group_name: "Группа",
     course: "Курс",

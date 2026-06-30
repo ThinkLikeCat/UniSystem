@@ -28,3 +28,12 @@ export async function changePassword(
 ): Promise<void> {
   await api.post("/profile/change-password", data);
 }
+
+export async function uploadAvatar(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await api.post<{ iconPath: string }>("/profile/avatar", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data.iconPath;
+}

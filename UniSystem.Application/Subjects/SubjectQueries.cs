@@ -20,10 +20,10 @@ public class GetSubjectsQueryHandler : IRequestHandler<GetSubjectsQuery, List<Su
 
     public async Task<List<SubjectDto>> Handle(GetSubjectsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Subjects
-            .OrderBy(s => s.Name.Value)
-            .Select(s => new SubjectDto(s.Id, s.Name.Value))
+        var entities = await _context.Subjects
+            .OrderBy(s => s.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(s => new SubjectDto(s.Id, s.Name.Value)).ToList();
     }
 }
 

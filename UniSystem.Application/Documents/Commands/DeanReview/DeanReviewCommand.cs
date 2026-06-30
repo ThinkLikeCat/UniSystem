@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UniSystem.Application.Common.Interfaces;
 using UniSystem.Domain.Exceptions;
+using UniSystem.Domain.ValueObjects;
+using UniSystem.Domain.ValueObjects.DocumentStatus;
 
 namespace UniSystem.Application.Documents.Commands.DeanReview;
 
@@ -30,7 +32,7 @@ public class DeanReviewCommandHandler : IRequestHandler<DeanReviewCommand>
 
         var document = await _context.Documents
             .Include(d => d.CurrentStatus)
-            .FirstOrDefaultAsync(d => d.Id.Value == request.DocumentId, cancellationToken);
+            .FirstOrDefaultAsync(d => d.Id == new DocumentId(request.DocumentId), cancellationToken);
 
         if (document is null)
             throw new DomainException("Document not found.");
@@ -46,7 +48,7 @@ public class DeanReviewCommandHandler : IRequestHandler<DeanReviewCommand>
             case DeanDecision.Approve:
             {
                 var approvedStatus = await _context.DocumentStatuses
-                    .FirstOrDefaultAsync(s => s.Name.Value == "Утверждён", cancellationToken);
+                    .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("Утверждён"), cancellationToken);
 
                 if (approvedStatus is null)
                     throw new DomainException("Status 'Утверждён' not found.");
@@ -59,7 +61,7 @@ public class DeanReviewCommandHandler : IRequestHandler<DeanReviewCommand>
             case DeanDecision.Reject:
             {
                 var rejectedStatus = await _context.DocumentStatuses
-                    .FirstOrDefaultAsync(s => s.Name.Value == "Отклонён", cancellationToken);
+                    .FirstOrDefaultAsync(s => s.Name == new DocumentStatusName("Отклонён"), cancellationToken);
 
                 if (rejectedStatus is null)
                     throw new DomainException("Status 'Отклонён' not found.");

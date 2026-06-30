@@ -9,6 +9,7 @@ import {
   deanReview,
 } from "@/lib/documents";
 import { Button } from "@/components/ui/Button";
+import { downloadAttachment } from "@/lib/attachments";
 import type { DocumentDetailDto } from "@/types";
 import { ArrowLeft, CheckCircle, XCircle, RefreshCw, MessageSquare } from "lucide-react";
 import Link from "next/link";
@@ -195,14 +196,12 @@ export default function ReviewDocumentPage() {
                       <span className="text-text-secondary">
                         {att.fileName}
                       </span>
-                      <a
-                        href={`http://localhost:5000/api/documents/${id}/attachments/${att.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => downloadAttachment(id, att.id, att.fileName)}
                         className="text-primary hover:underline ml-auto"
                       >
                         Скачать
-                      </a>
+                      </button>
                     </div>
                   ))}
                 </div>

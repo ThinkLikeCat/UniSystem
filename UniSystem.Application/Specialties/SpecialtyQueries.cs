@@ -20,10 +20,10 @@ public class GetSpecialtiesQueryHandler : IRequestHandler<GetSpecialtiesQuery, L
 
     public async Task<List<SpecialtyDto>> Handle(GetSpecialtiesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Specialties
-            .OrderBy(s => s.Name.Value)
-            .Select(s => new SpecialtyDto(s.Id, s.Name.Value, s.Code.Value, s.MaxDurationInYears.Value))
+        var entities = await _context.Specialties
+            .OrderBy(s => s.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(s => new SpecialtyDto(s.Id, s.Name.Value, s.Code.Value, s.MaxDurationInYears.Value)).ToList();
     }
 }
 

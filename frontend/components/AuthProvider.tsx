@@ -13,7 +13,6 @@ import { login as loginApi, getMe } from "@/lib/auth";
 import type {
   CurrentUserResponse,
   LoginRequest,
-  LoginResponse,
 } from "@/types";
 
 interface AuthContextValue {
@@ -21,7 +20,7 @@ interface AuthContextValue {
   token: string | null;
   loading: boolean;
   error: string;
-  login: (data: LoginRequest) => Promise<LoginResponse>;
+  login: (data: LoginRequest) => Promise<string>;
   logout: () => void;
 }
 
@@ -58,13 +57,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     async (data: LoginRequest) => {
       setError("");
-      const response = await loginApi(data);
-      localStorage.setItem("token", response.token);
-      await fetchUser(response.token);
-      router.push("/");
-      return response;
+      const token = await loginApi(data);
+      localStorage.setItem("token", token);
+      await fetchUser(token);
+      return token;
     },
-    [fetchUser, router]
+    [fetchUser]
   );
 
   const logout = useCallback(() => {

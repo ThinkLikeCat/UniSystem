@@ -43,6 +43,15 @@ public class GetDocumentsQueryHandler : IRequestHandler<GetDocumentsQuery, List<
         if (_userContext.Roles.Contains("StudentProfile"))
             query = query.Where(d => d.AuthorId == userId);
 
+        if (_userContext.Roles.Contains("Curator"))
+        {
+            var curatorProfile = await _context.StaffProfiles
+                .FirstOrDefaultAsync(p => p.Id == userId, cancellationToken);
+
+            if (curatorProfile?.AcademicGroupId is not null)
+                query = query.Where(d => d.Author.StudentProfile!.AcademicGroupId == curatorProfile.AcademicGroupId.Value);
+        }
+
         if (request.DocumentTypeId is not null)
             query = query.Where(d => d.DocumentTypeId == request.DocumentTypeId);
 

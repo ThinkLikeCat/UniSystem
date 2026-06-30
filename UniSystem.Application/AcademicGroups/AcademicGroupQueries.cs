@@ -20,16 +20,17 @@ public class GetAcademicGroupsQueryHandler : IRequestHandler<GetAcademicGroupsQu
 
     public async Task<List<AcademicGroupDto>> Handle(GetAcademicGroupsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.AcademicGroups
-            .OrderBy(g => g.Name.Value)
-            .Select(g => new AcademicGroupDto(
-                g.Id,
-                g.Name.Value,
-                g.MaxCount.Value,
-                (short)g.Course.Value,
-                g.SpecialtyId,
-                g.Specialty.Name.Value))
+        var entities = await _context.AcademicGroups
+            .Include(g => g.Specialty)
+            .OrderBy(g => g.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(g => new AcademicGroupDto(
+            g.Id,
+            g.Name.Value,
+            g.MaxCount.Value,
+            (short)g.Course.Value,
+            g.SpecialtyId,
+            g.Specialty.Name.Value)).ToList();
     }
 }
 

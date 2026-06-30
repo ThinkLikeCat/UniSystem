@@ -20,10 +20,10 @@ public class GetDocumentStatusesQueryHandler : IRequestHandler<GetDocumentStatus
 
     public async Task<List<DocumentStatusDto>> Handle(GetDocumentStatusesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.DocumentStatuses
-            .OrderBy(s => s.Name.Value)
-            .Select(s => new DocumentStatusDto(s.Id, s.Name.Value))
+        var entities = await _context.DocumentStatuses
+            .OrderBy(s => s.Name)
             .ToListAsync(cancellationToken);
+        return entities.Select(s => new DocumentStatusDto(s.Id, s.Name.Value)).ToList();
     }
 }
 

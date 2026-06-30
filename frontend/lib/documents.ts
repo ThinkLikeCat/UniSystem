@@ -59,6 +59,10 @@ export async function deanReview(
   await api.post(`/documents/${id}/dean-review`, data);
 }
 
+export async function deleteDraftDocument(id: string): Promise<void> {
+  await api.delete(`/documents/${id}`);
+}
+
 export async function getDocumentTypeTemplate(
   id: number
 ): Promise<TemplatePreviewDto> {
